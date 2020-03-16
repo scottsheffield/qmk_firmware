@@ -25,12 +25,16 @@ extern uint8_t is_master;
 #define _LOWER 1
 #define _RAISE 2
 #define _ADJUST 3
+#define _GAMER 4
+#define _GAMER_MOD 5
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
   RAISE,
   ADJUST,
+  GAMER,
+  GAMER_MOD,
   BACKLIT,
   RGBRST
 };
@@ -70,18 +74,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                               //`--------------------'  `--------------------'
   ),
 
-// [_OLD_LOWER] = LAYOUT_kc( 
-//   ,-----------------------------------------.                ,-----------------------------------------.
-//      TILD,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSPC,
-//   |------+------+------+------+------+------|                |------+------+------+------+------+------|
-//     CTLTB, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   MINS,   EQL,  LCBR,  RCBR,  PIPE,   GRV,
-//   |------+------+------+------+------+------|                |------+------+------+------+------+------|
-//      LSFT, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   UNDS,  PLUS,  LBRC,  RBRC,  BSLS,  TILD,
-//   |------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-//                                 GUIEI, LOWER,   SPC,      ENT, RAISE, ALTKN 
-                                //`--------------------'  `--------------------'
-// ),
-
   [_LOWER] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
       CTLTB,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSPC,\
@@ -116,7 +108,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                   GUIEI, LOWER,   SPC,      SPC, RAISE, ALTKN \
                               //`--------------------'  `--------------------'
-  )
+  ),
+  [_GAMER] = LAYOUT_kc( \
+  //,-----------------------------------------.                ,-----------------------------------------.
+      CTLTB,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+        ESC,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+       LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,   ENT,\
+  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
+                              GAMER_MOD, SPC,   SPC,      SPC, RAISE, ALTKN \
+                              //`--------------------'  `--------------------'
+  ),
+
+  [_GAMER_MOD] = LAYOUT_kc( \
+  //,-----------------------------------------.                ,-----------------------------------------.
+        TAB,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,  BSPC,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+        GRV, XXXXX,  HOME,  PGDN,  PGUP,   END,                   LEFT,  DOWN,    UP, RIGHT, XXXXX, XXXXX,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+       LSFT,   F11,   F12,   F13,   F14,   F15,                    F16,   F17,   F18,   F19,   F20, XXXXX,\
+  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
+                              GAMER_MOD, SPC,   SPC,      SPC, RAISE, ALTKN \
+                              //`--------------------'  `--------------------'
+  ),
 };
 
 int RGB_current_mode;
@@ -209,6 +224,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+    case GAMER:
+      if (record->event.pressed) {
+        persistent_default_layer_set(1UL<<_GAMER);
+      }
+    case GAMER_MOD:
+      if (record->event.pressed) {
+        layer_on(_GAMER_MOD);
+        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
+      } else {
+        layer_off(_GAMER_MOD);
+        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
+      }
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
