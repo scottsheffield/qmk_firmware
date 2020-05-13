@@ -47,6 +47,8 @@ enum macro_keycodes {
 #define KC_XXXXX KC_NO
 #define KC_LOWER LOWER
 #define KC_RAISE RAISE
+#define KC_GAMER GAMER
+#define KC_GAMER_MOD GAMER_MOD
 #define KC_RST   RESET
 #define KC_LRST  RGBRST
 #define KC_LTOG  RGB_TOG

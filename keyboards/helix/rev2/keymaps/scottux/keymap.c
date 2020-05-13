@@ -231,6 +231,7 @@ float music_scale[][2]     = SONG(MUSIC_SCALE_SOUND);
 bool TOG_STATUS = false;
 int RGB_current_mode;
 int last_cursor;
+int last_input;
 bool cursor_toggle;
 void persistent_default_layer_set(uint16_t default_layer) {
   eeconfig_update_default_layer(default_layer);
@@ -250,6 +251,7 @@ void update_tri_layer_RGB(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  last_input = timer_read();
   switch (keycode) {
     case QWERTY:
       if (record->event.pressed) {
@@ -364,6 +366,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void matrix_init_user(void) {
     last_cursor = timer_read();
+    last_input = timer_read();
     cursor_toggle = false;
     #ifdef AUDIO_ENABLE
         startup_user();
@@ -428,13 +431,12 @@ void matrix_update(struct CharacterMatrix *dest,
 
 static void render_logo(struct CharacterMatrix *matrix) {
 
-  static char logo[]={
-    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,0x90,0x91,0x92,0x93,0x94,
-    0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,0xb0,0xb1,0xb2,0xb3,0xb4,
-    0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,0xd0,0xd1,0xd2,0xd3,0xd4,
-    0};
-  matrix_write(matrix, logo);
-  //matrix_write_P(&matrix, PSTR(" Split keyboard kit"));
+  matrix_write_P(matrix, PSTR(
+      "\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\n"
+      "\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\n"
+      "\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\n"
+      "\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef"
+  ));
 }
 
 
@@ -442,16 +444,16 @@ static void render_logo(struct CharacterMatrix *matrix) {
 void render_status(struct CharacterMatrix *matrix) {
 
   // Render to mode icon
-  static char logo[][2][3]={{{0x95,0x96,0},{0xb5,0xb6,0}},{{0x97,0x98,0},{0xb7,0xb8,0}}};
-  if(keymap_config.swap_lalt_lgui==false){
-    matrix_write(matrix, logo[0][0]);
-    matrix_write_P(matrix, PSTR("\n"));
-    matrix_write(matrix, logo[0][1]);
-  }else{
-    matrix_write(matrix, logo[1][0]);
-    matrix_write_P(matrix, PSTR("\n"));
-    matrix_write(matrix, logo[1][1]);
-  }
+  // static char logo[][2][3]={{{0x95,0x96,0},{0xb5,0xb6,0}},{{0x97,0x98,0},{0xb7,0xb8,0}}};
+  // if(keymap_config.swap_lalt_lgui==false){
+  //   matrix_write(matrix, logo[0][0]);
+  //   matrix_write_P(matrix, PSTR("\n"));
+  //   matrix_write(matrix, logo[0][1]);
+  // }else{
+  //   matrix_write(matrix, logo[1][0]);
+  //   matrix_write_P(matrix, PSTR("\n"));
+  //   matrix_write(matrix, logo[1][1]);
+  // }
 
   // Define layers here, Have not worked out how to have text displayed for each layer. Copy down the number you see and add a case for it below
   char buf[40];
@@ -475,15 +477,17 @@ void render_status(struct CharacterMatrix *matrix) {
         default:
            matrix_write(matrix, buf);
     }
+  if (timer_elapsed(last_input) < 60000) {
+    if(timer_elapsed(last_cursor) > 400) {
+      cursor_toggle = !cursor_toggle;
+      last_cursor = timer_read();
+    }
+    matrix_write_P(matrix, PSTR("\n$ "));
+    if (cursor_toggle) {
+        matrix_write_P(matrix, PSTR("_"));
+    }
+  }
   
-  if(timer_elapsed(last_cursor) > 400) {
-    cursor_toggle = !cursor_toggle;
-    last_cursor = timer_read();
-  }
-  matrix_write_P(matrix, PSTR("\n$ "));
-  if (cursor_toggle) {
-      matrix_write_P(matrix, PSTR("_"));
-  }
 
   // char boof[40];
   // snprintf(boof, sizeof(boof), "%u", timer_read());
