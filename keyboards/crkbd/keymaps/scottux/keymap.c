@@ -1,11 +1,14 @@
 #include QMK_KEYBOARD_H
 #include "bootloader.h"
 #ifdef PROTOCOL_LUFA
-  #include "lufa.h"
-  #include "split_util.h"
+#include "lufa.h"
+#include "split_util.h"
 #endif
 #ifdef SSD1306OLED
-  #include "ssd1306.h"
+#include "ssd1306.h"
+#endif
+#ifdef CONSOLE_ENABLED
+#include <print.h>
 #endif
 
 extern keymap_config_t keymap_config;
@@ -15,7 +18,17 @@ extern keymap_config_t keymap_config;
 extern rgblight_config_t rgblight_config;
 #endif
 
-extern uint8_t is_master;
+extern uint8_t is_leader;
+
+typedef union {
+    uint32_t raw;
+    struct {
+      uint8_t gradient_stops : 8;
+      uint8_t mode : 8;
+      uint8_t hue : 8;
+      uint8_t underglow : 8;
+    };
+} rgblight_theme_t;
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
@@ -36,7 +49,10 @@ enum custom_keycodes {
   GAMER,
   GAMER_MOD,
   BACKLIT,
-  RGBRST
+  RGBRST,
+  TOGTHM,
+  UPUNDR,
+  DNUNDR,
 };
 
 enum macro_keycodes {
@@ -49,6 +65,9 @@ enum macro_keycodes {
 #define KC_RAISE RAISE
 #define KC_GAMER GAMER
 #define KC_GAMER_MOD GAMER_MOD
+#define KC_TOGTHM TOGTHM
+#define KC_UPUNDR UPUNDR
+#define KC_DNUNDR DNUNDR
 #define KC_RST   RESET
 #define KC_LRST  RGBRST
 #define KC_LTOG  RGB_TOG
@@ -60,66 +79,66 @@ enum macro_keycodes {
 #define KC_LVAD  RGB_VAD
 #define KC_LMOD  RGB_MOD
 #define KC_CTLTB CTL_T(KC_TAB)
-#define KC_GUIEI GUI_T(KC_LANG2)
-#define KC_ALTKN ALT_T(KC_LANG1)
+#define KC_GUIESC GUI_T(KC_ESC)
+// #define KC_ALTKN ALT_T(KC_LANG1)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
-      CTLTB,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
+        TAB,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-        ESC,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
+       LCTL,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,   ENT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                  GUIEI, LOWER,   SPC,      SPC, RAISE, ALTKN \
+                                 GUIESC, LOWER,   SPC,      SPC, RAISE,  LALT \
                               //`--------------------'  `--------------------'
   ),
 
   [_LOWER] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
-      CTLTB,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSPC,\
+        TAB,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        TILD,  UNDS,  MINS,    LT,  LCBR,  LBRC,                   RBRC,  RCBR,    GT,  PLUS,   EQL,  PIPE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT, XXXXX,  MUTE,  VOLD,  VOLU, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT,  BSLS, XXXXX,\
+       LSFT,   ESC,  MUTE,  VOLD,  VOLU, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT,  BSLS, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                  GUIEI, LOWER,   SPC,      SPC, RAISE, ALTKN \
+                                 GUIESC, LOWER,   SPC,      SPC, RAISE,  LALT \
                               //`--------------------'  `--------------------'
   ),
 
   [_RAISE] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
-      CTLTB,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,  BSPC,\
+        TAB,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-        GRV, XXXXX,  HOME,  PGDN,  PGUP,   END,                   LEFT,  DOWN,    UP, RIGHT, XXXXX, XXXXX,\
+        GRV, XXXXX,  HOME,  PGDN,  PGUP,   END,                  XXXXX,  LEFT,  DOWN,    UP, RIGHT, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LSFT,   F11,   F12,   F13,   F14,   F15,                    F16,   F17,   F18,   F19,   F20, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                  GUIEI, LOWER,   SPC,      SPC, RAISE, ALTKN \
+                                 GUIESC, LOWER,   SPC,      SPC, RAISE,  LALT \
                               //`--------------------'  `--------------------'
   ),
 
   [_ADJUST] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
-      XXXXX,   RST,  LRST, XXXXX, XXXXX, XXXXX,                     F1,    F2,    F3,    F4,    F5,    F6,\
+     TOGTHM,   RST,  LRST, XXXXX, XXXXX, XXXXX,                     F1,    F2,    F3,    F4,    F5,    F6,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       CAPS,  LTOG,  LHUI,  LSAI,  LVAI, XXXXX,                     F7,    F8,    F9,   F10,   F11,   F12,\
+       CAPS,  LTOG,  LHUI,  LSAI,  LVAI,UPUNDR,                     F7,    F8,    F9,   F10,   F11,   F12,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      XXXXX,  LMOD,  LHUD,  LSAD,  LVAD, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+      XXXXX,  LMOD,  LHUD,  LSAD,  LVAD,DNUNDR,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                  GUIEI, LOWER,   SPC,      SPC, RAISE, ALTKN \
+                                 GUIESC, LOWER,   SPC,      SPC, RAISE,  LALT \
                               //`--------------------'  `--------------------'
   ),
   [_GAMER] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
-      CTLTB,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
+        TAB,   TAB,     Q,     W,     E,     R,                      Y,     U,     I,     O,     P,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-        ESC,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
+       LCTL,  LSFT,     A,     S,     D,     F,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,   ENT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                              GAMER_MOD, SPC,   SPC,      SPC, RAISE, ALTKN \
+                              GAMER_MOD, SPC,   SPC,      SPC, RAISE,  LALT \
                               //`--------------------'  `--------------------'
   ),
 
@@ -131,7 +150,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LSFT,   F11,   F12,   F13,   F14,   F15,                    F16,   F17,   F18,   F19,   F20, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                              GAMER_MOD, SPC,   SPC,      SPC, RAISE, ALTKN \
+                              GAMER_MOD, SPC,   SPC,      SPC, RAISE,  LALT \
                               //`--------------------'  `--------------------'
   ),
 };
@@ -152,15 +171,111 @@ void update_tri_layer_RGB(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
   }
 }
 
+#ifdef RGBLIGHT_ENABLE
+bool using_theme = false;
+bool selected_theme = false;
+uint8_t current_underglow = 0;
+const uint8_t cyber_sat = 255;
+const uint8_t cyber_val = 180;
+rgblight_theme_t cybersunset = {
+  .mode=5,
+  .hue=35,
+  .underglow=10,
+  .gradient_stops=3,
+};
+rgblight_theme_t cyberdawn = {
+  .mode=4,
+  .hue=110,
+  .underglow=210,
+  .gradient_stops=4,
+};
+
+void set_underglow(uint8_t underglow_hue, uint8_t sat, uint8_t val) {
+  current_underglow = underglow_hue;
+  int i;
+  for (i = 0; i < 6; i++) {
+    rgblight_sethsv_at(underglow_hue, sat, val + ((6 - i) * 5), i);
+  }
+}
+
+void set_theme(uint8_t theme_mode, uint8_t theme_hue, uint8_t theme_sat, uint8_t theme_val, uint8_t theme_underglow_hue) {
+  rgblight_mode_noeeprom(theme_mode);
+  rgblight_sethsv_noeeprom(theme_hue, theme_sat, theme_val);
+  set_underglow(theme_underglow_hue, theme_sat, theme_val);
+}
+
+void increase_underglow_hue(void) {
+  set_underglow(
+    (current_underglow + RGBLIGHT_HUE_STEP) % 255,
+    rgblight_config.sat,
+    rgblight_config.val
+  );
+}
+
+void decrease_underglow_hue(void) {
+  set_underglow(
+    (current_underglow - RGBLIGHT_HUE_STEP) % 255,
+    rgblight_config.sat,
+    rgblight_config.val
+  );
+}
+
+void set_theme_cybersunset(void) {
+  set_theme(
+    cybersunset.mode,
+    cybersunset.hue,
+    cyber_sat,
+    rgblight_config.val,
+    cybersunset.underglow
+  );
+}
+void set_theme_cyberdawn(void) {
+  set_theme(
+    cyberdawn.mode,
+    cyberdawn.hue,
+    cyber_sat,
+    rgblight_config.val,
+    cyberdawn.underglow
+  );
+}
+void toggle_theme(void) {
+  if (selected_theme) {
+    set_theme_cyberdawn();
+  } else {
+    set_theme_cybersunset();
+  }
+  selected_theme = !selected_theme;
+}
+void toggle_theme_and_eeprom(void) {
+  toggle_theme();
+  eeconfig_update_rgblight(rgblight_config.raw);
+}
+
+void manual_led_persist(void) {
+
+}
+#endif
+
 void matrix_init_user(void) {
     #ifdef RGBLIGHT_ENABLE
       RGB_current_mode = rgblight_config.mode;
+      if (rgblight_config.hue == cybersunset.hue) {
+        using_theme = true;
+        selected_theme = true;
+        set_theme_cybersunset();
+      } else if (rgblight_config.hue == cyberdawn.hue) {
+        using_theme = true;
+        selected_theme = false;
+        set_theme_cyberdawn();
+      }
     #endif
     //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
     #ifdef SSD1306OLED
         iota_gfx_init(!has_usb());   // turns on the display
     #endif
 }
+
+
 
 //SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
 #ifdef SSD1306OLED
@@ -173,22 +288,41 @@ const char *read_keylog(void);
 const char *read_keylogs(void);
 
 const char *read_mode_icon(bool swap);
-// const char *read_host_led_state(void);
+const char *read_host_led_state(void);
 void set_timelog(void);
 const char *read_timelog(void);
+char buffer[4];
 
 void matrix_scan_user(void) {
    iota_gfx_task();
 }
 
+void debug_backlight_info(struct CharacterMatrix *matrix) {
+  itoa(rgblight_get_hue(), buffer, 10);
+  matrix_write(matrix, "h: ");
+  matrix_write(matrix, buffer);
+  itoa(rgblight_get_mode(), buffer, 10);
+  matrix_write(matrix, " m: ");
+  matrix_write(matrix, buffer);
+  itoa(rgblight_get_sat(), buffer, 10);
+  matrix_write(matrix, " s: ");
+  matrix_write_ln(matrix, buffer);
+  itoa(rgblight_get_val(), buffer, 10);
+  matrix_write(matrix, "v: ");
+  matrix_write(matrix, buffer);
+  itoa(current_underglow, buffer, 10);
+  matrix_write(matrix, " u: ");
+  matrix_write_ln(matrix, buffer);
+}
+
 void matrix_render_user(struct CharacterMatrix *matrix) {
-  if (is_master) {
+  if (is_leader) {
     // If you want to change the display of OLED, you need to change here
     matrix_write_ln(matrix, read_layer_state());
     // matrix_write_ln(matrix, read_keylog());
     // matrix_write_ln(matrix, read_keylogs());
     //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
-    //matrix_write_ln(matrix, read_host_led_state());
+    debug_backlight_info(matrix);
     matrix_write_ln(matrix, read_timelog());
   } else {
     // matrix_write(matrix, read_logo());
@@ -218,6 +352,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif
     set_timelog();
   }
+#ifdef CONSOLE_ENABLE
+  uprintf("KL: kc: %u, col: %u, row: %u, pressed: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed);
+#endif 
 
   switch (keycode) {
     case QWERTY:
@@ -225,11 +362,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         persistent_default_layer_set(1UL<<_QWERTY);
       }
       return false;
-      break;
     case GAMER:
       if (record->event.pressed) {
         persistent_default_layer_set(1UL<<_GAMER);
       }
+      return false;
     case GAMER_MOD:
       if (record->event.pressed) {
         layer_on(_GAMER_MOD);
@@ -238,6 +375,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_off(_GAMER_MOD);
         update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
       }
+      return false;
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
@@ -247,7 +385,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
       }
       return false;
-      break;
     case RAISE:
       if (record->event.pressed) {
         layer_on(_RAISE);
@@ -257,34 +394,51 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
       }
       return false;
-      break;
     case ADJUST:
-        if (record->event.pressed) {
-          layer_on(_ADJUST);
-        } else {
-          layer_off(_ADJUST);
-        }
-        return false;
-        break;
+      if (record->event.pressed) {
+        layer_on(_ADJUST);
+      } else {
+        layer_off(_ADJUST);
+      }
+      return false;
     case RGB_MOD:
       #ifdef RGBLIGHT_ENABLE
-        if (record->event.pressed) {
-          rgblight_mode(RGB_current_mode);
-          rgblight_step();
-          RGB_current_mode = rgblight_config.mode;
-        }
+      if (record->event.pressed) {
+        rgblight_mode(RGB_current_mode);
+        rgblight_step();
+        RGB_current_mode = rgblight_config.mode;
+      }
       #endif
       return false;
-      break;
     case RGBRST:
       #ifdef RGBLIGHT_ENABLE
-        if (record->event.pressed) {
-          eeconfig_update_rgblight_default();
-          rgblight_enable();
-          RGB_current_mode = rgblight_config.mode;
-        }
+      if (record->event.pressed) {
+        eeconfig_update_rgblight_default();
+        rgblight_enable();
+        RGB_current_mode = rgblight_config.mode;
+      }
       #endif
-      break;
+    case TOGTHM:
+      #ifdef RGBLIGHT_ENABLE
+      if (record->event.pressed) {
+        toggle_theme();
+      }
+      #endif
+      return false;
+    case UPUNDR:
+      #ifdef RGBLIGHT_ENABLE
+      if (record->event.pressed) {
+        increase_underglow_hue();
+      }
+      #endif
+      return false;
+    case DNUNDR:
+      #ifdef RGBLIGHT_ENABLE
+      if (record->event.pressed) {
+        decrease_underglow_hue();
+      }
+      #endif
+      return false;
   }
   return true;
 }
