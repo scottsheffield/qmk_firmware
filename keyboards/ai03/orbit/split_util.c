@@ -24,19 +24,19 @@ bool is_keyboard_left(void) {
     #ifdef EE_HANDS
       return eeprom_read_byte(EECONFIG_HANDEDNESS);
     #else
-      #ifdef MASTER_RIGHT
-        return !is_keyboard_master();
+      #ifdef LEADER_RIGHT
+        return !is_keyboard_leader();
       #else
-        return is_keyboard_master();
+        return is_keyboard_leader();
       #endif
     #endif
   #endif
 }
 
-bool is_keyboard_master(void)
+bool is_keyboard_leader(void)
 {
 #ifdef __AVR__
-  static enum { UNKNOWN, MASTER, SLAVE } usbstate = UNKNOWN;
+  static enum { UNKNOWN, LEADER, FOLLOWER } usbstate = UNKNOWN;
 
   // only check once, as this is called often
   if (usbstate == UNKNOWN)
@@ -44,31 +44,31 @@ bool is_keyboard_master(void)
     USBCON |= (1 << OTGPADE);  // enables VBUS pad
     wait_us(5);
 
-    usbstate = (USBSTA & (1 << VBUS)) ? MASTER : SLAVE;  // checks state of VBUS
+    usbstate = (USBSTA & (1 << VBUS)) ? LEADER : FOLLOWER;  // checks state of VBUS
   }
 
-  return (usbstate == MASTER);
+  return (usbstate == LEADER);
 #else
   return true;
 #endif
 }
 
-static void keyboard_master_setup(void) {
+static void keyboard_leader_setup(void) {
 #if defined(USE_I2C)
   #ifdef SSD1306OLED
-    matrix_master_OLED_init ();
+    matrix_leader_OLED_init ();
   #endif
 #endif
-  transport_master_init();
+  transport_leader_init();
 
-  // For master the Backlight info needs to be sent on startup
+  // For leader the Backlight info needs to be sent on startup
   // Otherwise the salve won't start with the proper info until an update
   BACKLIT_DIRTY = true;
 }
 
-static void keyboard_slave_setup(void)
+static void keyboard_follower_setup(void)
 {
-  transport_slave_init();
+  transport_follower_init();
 }
 
 // this code runs before the usb and keyboard is initialized
@@ -76,12 +76,12 @@ void matrix_setup(void)
 {
   isLeftHand = is_keyboard_left();
 
-  if (is_keyboard_master())
+  if (is_keyboard_leader())
   {
-    keyboard_master_setup();
+    keyboard_leader_setup();
   }
   else
   {
-    keyboard_slave_setup();
+    keyboard_follower_setup();
   }
 }

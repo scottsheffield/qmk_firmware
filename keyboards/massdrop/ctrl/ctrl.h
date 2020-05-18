@@ -4,7 +4,7 @@
 #include "config_led.h"
 #include "matrix.h"
 
-#include "i2c_master.h"
+#include "i2c_leader.h"
 #include "led_matrix.h" //For led keycodes
 #include "usb/udi_cdc.h"
 #include "usb/usb2422.h"

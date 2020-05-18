@@ -12,6 +12,6 @@
 #undef RGBLED_NUM
 #define RGBLED_NUM 17
 
-/* Set up RGB lighting so it works with either side as master. */
+/* Set up RGB lighting so it works with either side as leader. */
 #undef RGBLED_SPLIT
 #define RGBLED_SPLIT { 8, 9 }

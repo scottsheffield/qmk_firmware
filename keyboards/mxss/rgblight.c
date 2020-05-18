@@ -639,13 +639,13 @@ void rgblight_sethsv_range(uint8_t hue, uint8_t sat, uint8_t val, uint8_t start,
 }
 
 #ifndef RGBLIGHT_SPLIT
-void rgblight_setrgb_master(uint8_t r, uint8_t g, uint8_t b) { rgblight_setrgb_range(r, g, b, 0, (uint8_t)RGBLED_NUM / 2); }
+void rgblight_setrgb_leader(uint8_t r, uint8_t g, uint8_t b) { rgblight_setrgb_range(r, g, b, 0, (uint8_t)RGBLED_NUM / 2); }
 
-void rgblight_setrgb_slave(uint8_t r, uint8_t g, uint8_t b) { rgblight_setrgb_range(r, g, b, (uint8_t)RGBLED_NUM / 2, (uint8_t)RGBLED_NUM); }
+void rgblight_setrgb_follower(uint8_t r, uint8_t g, uint8_t b) { rgblight_setrgb_range(r, g, b, (uint8_t)RGBLED_NUM / 2, (uint8_t)RGBLED_NUM); }
 
-void rgblight_sethsv_master(uint8_t hue, uint8_t sat, uint8_t val) { rgblight_sethsv_range(hue, sat, val, 0, (uint8_t)RGBLED_NUM / 2); }
+void rgblight_sethsv_leader(uint8_t hue, uint8_t sat, uint8_t val) { rgblight_sethsv_range(hue, sat, val, 0, (uint8_t)RGBLED_NUM / 2); }
 
-void rgblight_sethsv_slave(uint8_t hue, uint8_t sat, uint8_t val) { rgblight_sethsv_range(hue, sat, val, (uint8_t)RGBLED_NUM / 2, (uint8_t)RGBLED_NUM); }
+void rgblight_sethsv_follower(uint8_t hue, uint8_t sat, uint8_t val) { rgblight_sethsv_range(hue, sat, val, (uint8_t)RGBLED_NUM / 2, (uint8_t)RGBLED_NUM); }
 #endif  // ifndef RGBLIGHT_SPLIT
 
 #ifndef RGBLIGHT_CUSTOM_DRIVER
@@ -719,7 +719,7 @@ void rgblight_set(void) {
 #endif
 
 #ifdef RGBLIGHT_SPLIT
-/* for split keyboard master side */
+/* for split keyboard leader side */
 uint8_t rgblight_get_change_flags(void) { return rgblight_status.change_flags; }
 
 void rgblight_clear_change_flags(void) { rgblight_status.change_flags = 0; }
@@ -729,7 +729,7 @@ void rgblight_get_syncinfo(rgblight_syncinfo_t *syncinfo) {
     syncinfo->status = rgblight_status;
 }
 
-/* for split keyboard slave side */
+/* for split keyboard follower side */
 void rgblight_update_sync(rgblight_syncinfo_t *syncinfo, bool write_to_eeprom) {
     if (syncinfo->status.change_flags & RGBLIGHT_STATUS_CHANGE_MODE) {
         if (syncinfo->config.enable) {
@@ -907,7 +907,7 @@ void rgblight_task(void) {
                 tick_flag = false;
                 if (timer_elapsed(report_last_timer) >= 30000) {
                     report_last_timer = timer_read();
-                    dprintf("rgblight animation tick report to slave\n");
+                    dprintf("rgblight animation tick report to follower\n");
                     RGBLIGHT_SPLIT_ANIMATION_TICK;
                 }
             }

@@ -63,7 +63,7 @@ void SR_EXP_Init(void) {
     SR_EXP_SERCOM->SPI.CTRLA.bit.CPHA = 1;  // Clock Phase - Leading Edge Falling, change, Trailing Edge - Rising, sample
     SR_EXP_SERCOM->SPI.CTRLA.bit.DIPO = 3;  // Data In Pinout - SERCOM PAD[3] is used as data input (Configure away from DOPO. Not using input.)
     SR_EXP_SERCOM->SPI.CTRLA.bit.DOPO = 0;  // Data Output PAD[0], Serial Clock PAD[1]
-    SR_EXP_SERCOM->SPI.CTRLA.bit.MODE = 3;  // Operating Mode - Master operation
+    SR_EXP_SERCOM->SPI.CTRLA.bit.MODE = 3;  // Operating Mode - Leader operation
 
     SR_EXP_SERCOM->SPI.CTRLA.bit.ENABLE = 1;  // Enable - Peripheral is enabled or being enabled
     while (SR_EXP_SERCOM->SPI.SYNCBUSY.bit.ENABLE) {

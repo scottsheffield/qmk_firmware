@@ -231,7 +231,7 @@ SD,05C0             //     bit 12-8         7           6           5-0
                     //         00101        1           1           0
                     //         peripheral   pointing    keybaord    joystick, gamepad, ...
 SM,6                // Pairing mode: auto connect
-SM,4                // Master mode: Connection can be controled with GPIO6
+SM,4                // Leader mode: Connection can be controled with GPIO6
 SF,1                // Factroy reset
 R,1                 // reboot
 SR,Z                // removes all remote addresses for reconnecting.
@@ -241,7 +241,7 @@ SR,I                // registers last inquiry address
 
 Operation Modes
 ---------------
-SM,3        Auto Connect Master mode
+SM,3        Auto Connect Leader mode
 SM,4        Auto Connect DTR Mode uses GPIO6 to make and break connection(Mode =DTR)
                 confirm: auto connect works and control connection with GPIO6
 SM,5        Auto Connect ANY Mode (Mode =ANY)
@@ -330,7 +330,7 @@ Configuration timer settings
 ----------------------------
 Remote configuration is used for the module to be configured with various commands over Bluetooth(SPP profile only?).
 
-The module has remote configuration timer to allow remote configuration over Bluetooth after power up in Slave mode. In Master modes the remote configuration timer is set to 0(no remote configuration). (In Trigger Master mode the timer is used as an idle timer to break the connection after time expires with no charactors receive.)
+The module has remote configuration timer to allow remote configuration over Bluetooth after power up in Follower mode. In Leader modes the remote configuration timer is set to 0(no remote configuration). (In Trigger Leader mode the timer is used as an idle timer to break the connection after time expires with no charactors receive.)
     ST,0        // no remote, no local when connected
     ST,<1-252>  // local and remote with timeout in seconds from power up
     ST,253      // local only       without timeout
@@ -351,7 +351,7 @@ SQ,<mask>               Special configuration(GPIO, discovery mode, low latency,
 SR,<hex>                Store remote address
 SR,Z                    Erase all address
 SS,<string>             Set service name(1-20)**
-ST,<val>                Remote configuration timer(Master:0, Slave:0-255, Triger:as idle timer)
+ST,<val>                Remote configuration timer(Leader:0, Follower:0-255, Triger:as idle timer)
 SU,<val>                UART baud rate
 SW,<val>                low-power sniff mode** deep sleep and wake up every 625us * <val>
 SX,<0|1>                bonding enable  only acceps device that matches the stored address

@@ -26,12 +26,12 @@ SOFTWARE.
 #include "serial_link/protocol/transport.h"
 #include "serial_link/protocol/frame_validator.h"
 
-static bool is_master;
+static bool is_leader;
 
-void router_set_master(bool master) { is_master = master; }
+void router_set_leader(bool leader) { is_leader = leader; }
 
 void route_incoming_frame(uint8_t link, uint8_t* data, uint16_t size) {
-    if (is_master) {
+    if (is_leader) {
         if (link == DOWN_LINK) {
             transport_recv_frame(data[size - 1], data, size - 1);
         }
@@ -51,12 +51,12 @@ void route_incoming_frame(uint8_t link, uint8_t* data, uint16_t size) {
 
 void router_send_frame(uint8_t destination, uint8_t* data, uint16_t size) {
     if (destination == 0) {
-        if (!is_master) {
+        if (!is_leader) {
             data[size] = 1;
             validator_send_frame(UP_LINK, data, size + 1);
         }
     } else {
-        if (is_master) {
+        if (is_leader) {
             data[size] = destination;
             validator_send_frame(DOWN_LINK, data, size + 1);
         }

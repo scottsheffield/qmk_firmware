@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Select hand configuration */
 
-// #define MASTER_LEFT
-// #define MASTER_RIGHT
+// #define LEADER_LEFT
+// #define LEADER_RIGHT
 #define EE_HANDS
 
 // lower maximum brightness to lower power usage and prevent unresponsiveness

@@ -39,19 +39,19 @@ static inline bool _send_cmd1(uint8_t cmd) {
         goto done;
     }
 
-    if (i2c_master_write(0x0 /* command byte follows */)) {
+    if (i2c_leader_write(0x0 /* command byte follows */)) {
         print("failed to write control byte\n");
 
         goto done;
     }
 
-    if (i2c_master_write(cmd)) {
+    if (i2c_leader_write(cmd)) {
         xprintf("failed to write command %d\n", cmd);
         goto done;
     }
     res = true;
 done:
-    i2c_master_stop();
+    i2c_leader_stop();
     return res;
 }
 
@@ -100,20 +100,20 @@ static void clear_display(void) {
     if (i2c_start_write(SSD1306_ADDRESS)) {
         goto done;
     }
-    if (i2c_master_write(0x40)) {
+    if (i2c_leader_write(0x40)) {
         // Data mode
         goto done;
     }
     for (uint8_t row = 0; row < MatrixRows; ++row) {
         for (uint8_t col = 0; col < DisplayWidth; ++col) {
-            i2c_master_write(0);
+            i2c_leader_write(0);
         }
     }
 
     display.dirty = false;
 
 done:
-    i2c_master_stop();
+    i2c_leader_stop();
 }
 
 #    if DEBUG_TO_SCREEN
@@ -274,7 +274,7 @@ void matrix_render(struct CharacterMatrix *matrix) {
     if (i2c_start_write(SSD1306_ADDRESS)) {
         goto done;
     }
-    if (i2c_master_write(0x40)) {
+    if (i2c_leader_write(0x40)) {
         // Data mode
         goto done;
     }
@@ -285,18 +285,18 @@ void matrix_render(struct CharacterMatrix *matrix) {
 
             for (uint8_t glyphCol = 0; glyphCol < FontWidth - 1; ++glyphCol) {
                 uint8_t colBits = pgm_read_byte(glyph + glyphCol);
-                i2c_master_write(colBits);
+                i2c_leader_write(colBits);
             }
 
             // 1 column of space between chars (it's not included in the glyph)
-            i2c_master_write(0);
+            i2c_leader_write(0);
         }
     }
 
     matrix->dirty = false;
 
 done:
-    i2c_master_stop();
+    i2c_leader_stop();
 #    if DEBUG_TO_SCREEN
     --displaying;
 #    endif

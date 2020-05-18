@@ -10,7 +10,7 @@
 extern rgblight_config_t rgblight_config;
 #endif
 
-extern uint8_t is_master;
+extern uint8_t is_leader;
 
 enum layer_number {
     _DVORAK = 0,
@@ -254,7 +254,7 @@ const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS * 2][2]  = {
 };
 
 void encoder_update_user(uint8_t index, bool clockwise) {
-  if (!is_keyboard_master())
+  if (!is_keyboard_leader())
     return;
 
 #ifdef RGB_OLED_MENU
@@ -280,7 +280,7 @@ void encoder_update_user(uint8_t index, bool clockwise) {
 // OLED Driver Logic
 #ifdef OLED_DRIVER_ENABLE
  oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (is_keyboard_master())
+  if (is_keyboard_leader())
     return OLED_ROTATION_270;
   return rotation;
 }
@@ -350,7 +350,7 @@ static void render_status(void) {
 }
 
 void oled_task_user(void) {
-  if (is_keyboard_master()) {
+  if (is_keyboard_leader()) {
     render_status();
   } else {
     render_logo();

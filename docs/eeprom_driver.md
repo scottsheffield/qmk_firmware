@@ -14,11 +14,11 @@ No configurable options are available.
 
 ## I2C Driver Configuration
 
-Currently QMK supports 24xx-series chips over I2C. As such, requires a working i2c_master driver configuration. You can override the driver configuration via your config.h:
+Currently QMK supports 24xx-series chips over I2C. As such, requires a working i2c_leader driver configuration. You can override the driver configuration via your config.h:
 
 `config.h` override                         | Description                                                                         | Default Value
 ------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------
-`#define EXTERNAL_EEPROM_I2C_BASE_ADDRESS`  | Base I2C address for the EEPROM -- shifted left by 1 as per i2c_master requirements | 0b10100000
+`#define EXTERNAL_EEPROM_I2C_BASE_ADDRESS`  | Base I2C address for the EEPROM -- shifted left by 1 as per i2c_leader requirements | 0b10100000
 `#define EXTERNAL_EEPROM_I2C_ADDRESS(addr)` | Calculated I2C address for the EEPROM                                               | `(EXTERNAL_EEPROM_I2C_BASE_ADDRESS)`
 `#define EXTERNAL_EEPROM_BYTE_COUNT`        | Total size of the EEPROM in bytes                                                   | 8192
 `#define EXTERNAL_EEPROM_PAGE_SIZE`         | Page size of the EEPROM in bytes, as specified in the datasheet                     | 32

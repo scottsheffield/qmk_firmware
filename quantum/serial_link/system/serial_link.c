@@ -35,7 +35,7 @@ SOFTWARE.
 
 static event_source_t new_data_event;
 static bool           serial_link_connected;
-static bool           is_master = false;
+static bool           is_leader = false;
 
 static uint8_t keyboard_leds(void);
 static void    send_keyboard(report_keyboard_t* report);
@@ -101,7 +101,7 @@ static void print_error(char* str, eventflags_t flags, SerialDriver* driver) {
 #endif
 }
 
-bool is_serial_link_master(void) { return is_master; }
+bool is_serial_link_leader(void) { return is_leader; }
 
 // TODO: Optimize the stack size, this is probably way too big
 static THD_WORKING_AREA(serialThreadStack, 1024);
@@ -130,9 +130,9 @@ static THD_FUNCTION(serialThread, arg) {
             }
         }
 
-        // Always stay as master, even if the USB goes into sleep mode
-        is_master |= usbGetDriverStateI(&USBD1) == USB_ACTIVE;
-        router_set_master(is_master);
+        // Always stay as leader, even if the USB goes into sleep mode
+        is_leader |= usbGetDriverStateI(&USBD1) == USB_ACTIVE;
+        router_set_leader(is_leader);
 
         need_wait = true;
         need_wait &= read_from_serial(&SD2, UP_LINK) == 0;
@@ -157,8 +157,8 @@ typedef struct {
 
 static matrix_object_t last_matrix = {};
 
-SLAVE_TO_MASTER_OBJECT(keyboard_matrix, matrix_object_t);
-MASTER_TO_ALL_SLAVES_OBJECT(serial_link_connected, bool);
+FOLLOWER_TO_LEADER_OBJECT(keyboard_matrix, matrix_object_t);
+LEADER_TO_ALL_FOLLOWERS_OBJECT(serial_link_connected, bool);
 
 static remote_object_t* remote_objects[] = {
     REMOTE_OBJECT(serial_link_connected),
@@ -216,7 +216,7 @@ bool is_serial_link_connected(void) { return serial_link_connected; }
 
 host_driver_t* get_serial_link_driver(void) { return &serial_driver; }
 
-// NOTE: The driver does nothing, because the master handles everything
+// NOTE: The driver does nothing, because the leader handles everything
 uint8_t keyboard_leds(void) { return 0; }
 
 void send_keyboard(report_keyboard_t* report) { (void)report; }

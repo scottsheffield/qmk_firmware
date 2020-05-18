@@ -108,16 +108,16 @@ You can find the `EEPROM` files in the QMK firmware repo, [here](https://github.
 You can set the handedness at compile time.  This is done by adding the following to your `config.h` file:
 
 ```c
-#define MASTER_RIGHT
+#define LEADER_RIGHT
 ```
 
 or 
 
 ```c
-#define MASTER_LEFT
+#define LEADER_LEFT
 ```
 
-If neither are defined, the handedness defaults to `MASTER_LEFT`.
+If neither are defined, the handedness defaults to `LEADER_LEFT`.
 
 
 ### Communication Options
@@ -193,19 +193,19 @@ This sets how many LEDs are directly connected to each controller.  The first nu
 ```c
 #define SPLIT_USB_DETECT
 ```
-This option changes the startup behavior to detect an active USB connection when delegating master/slave. If this operation times out, then the half is assume to be a slave. This is the default behavior for ARM, and required for AVR Teensy boards (due to hardware limitations).
+This option changes the startup behavior to detect an active USB connection when delegating leader/follower. If this operation times out, then the half is assume to be a follower. This is the default behavior for ARM, and required for AVR Teensy boards (due to hardware limitations).
 
 ?> This setting will stop the ability to demo using battery packs.
 
 ```c
 #define SPLIT_USB_TIMEOUT 2000
 ```
-This sets the maximum timeout when detecting master/slave when using `SPLIT_USB_DETECT`.
+This sets the maximum timeout when detecting leader/follower when using `SPLIT_USB_DETECT`.
 
 ```c
 #define SPLIT_USB_TIMEOUT_POLL 10
 ```
-This sets the poll frequency when detecting master/slave when using `SPLIT_USB_DETECT`
+This sets the poll frequency when detecting leader/follower when using `SPLIT_USB_DETECT`
 
 ## Additional Resources
 

@@ -143,7 +143,7 @@ uint8_t TWIReadData(uint8_t TWIaddr, uint8_t bytesToRead, uint8_t repStart)
 		uint8_t TXdata[1];
 		// Shift the address and AND a 1 into the read write bit (set to write mode)
 		TXdata[0] = (TWIaddr << 1) | 0x01;
-		// Use the TWITransmitData function to initialize the transfer and address the slave
+		// Use the TWITransmitData function to initialize the transfer and address the follower
 		TWITransmitData(TXdata, 1, repStart, 0);
 	}
 	else
@@ -157,10 +157,10 @@ ISR (TWI_vect)
 {
 	switch (TWI_STATUS)
 	{
-		// ----\/ ---- MASTER TRANSMITTER OR WRITING ADDRESS ----\/ ----  //
+		// ----\/ ---- LEADER TRANSMITTER OR WRITING ADDRESS ----\/ ----  //
 		case TWI_MT_SLAW_ACK: // SLA+W transmitted and ACK received
-		// Set mode to Master Transmitter
-		TWIInfo.mode = MasterTransmitter;
+		// Set mode to Leader Transmitter
+		TWIInfo.mode = LeaderTransmitter;
 		case TWI_START_SENT: // Start condition has been transmitted
 		case TWI_MT_DATA_ACK: // Data byte has been transmitted, ACK received
 			if (TXBuffIndex < TXBuffLen) // If there is more data to send
@@ -184,11 +184,11 @@ ISR (TWI_vect)
 			}
 			break;
 
-		// ----\/ ---- MASTER RECEIVER ----\/ ----  //
+		// ----\/ ---- LEADER RECEIVER ----\/ ----  //
 
 		case TWI_MR_SLAR_ACK: // SLA+R has been transmitted, ACK has been received
-			// Switch to Master Receiver mode
-			TWIInfo.mode = MasterReceiver;
+			// Switch to Leader Receiver mode
+			TWIInfo.mode = LeaderReceiver;
 			// If there is more than one byte to be read, receive data byte and return an ACK
 			if (RXBuffIndex < RXBuffLen-1)
 			{
@@ -265,13 +265,13 @@ ISR (TWI_vect)
 			TWIInfo.mode = RepeatedStartSent;
 			break;
 
-		// ----\/ ---- SLAVE RECEIVER ----\/ ----  //
+		// ----\/ ---- FOLLOWER RECEIVER ----\/ ----  //
 
-		// TODO  IMPLEMENT SLAVE RECEIVER FUNCTIONALITY
+		// TODO  IMPLEMENT FOLLOWER RECEIVER FUNCTIONALITY
 
-		// ----\/ ---- SLAVE TRANSMITTER ----\/ ----  //
+		// ----\/ ---- FOLLOWER TRANSMITTER ----\/ ----  //
 
-		// TODO  IMPLEMENT SLAVE TRANSMITTER FUNCTIONALITY
+		// TODO  IMPLEMENT FOLLOWER TRANSMITTER FUNCTIONALITY
 
 		// ----\/ ---- MISCELLANEOUS STATES ----\/ ----  //
 		case TWI_NO_RELEVANT_INFO: // It is not really possible to get into this ISR on this condition

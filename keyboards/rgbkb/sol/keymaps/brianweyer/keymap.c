@@ -198,7 +198,7 @@ void matrix_init_user(void) {
 #ifdef OLED_DRIVER_ENABLE
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_keyboard_master())
+  if (!is_keyboard_leader())
     return OLED_ROTATION_180;  // flip 180 for offhand
   return rotation;
 }
@@ -260,7 +260,7 @@ static void render_status(void) {
 }
 
 void oled_task_user(void) {
-  if (is_keyboard_master())
+  if (is_keyboard_leader())
     render_status();
   else
     render_logo();

@@ -21,17 +21,17 @@ STM32_PATH := quantum/stm32
 # Force expansion
 TARGET := $(TARGET)
 
-# For split boards we need to set a master half.
-MASTER ?= left
-ifdef master
-    MASTER = $(master)
+# For split boards we need to set a leader half.
+LEADER ?= left
+ifdef leader
+    LEADER = $(leader)
 endif
 
-ifeq ($(MASTER),right)
-    OPT_DEFS += -DMASTER_IS_ON_RIGHT
+ifeq ($(LEADER),right)
+    OPT_DEFS += -DLEADER_IS_ON_RIGHT
 else
-    ifneq ($(MASTER),left)
-$(error MASTER does not have a valid value(left/right))
+    ifneq ($(LEADER),left)
+$(error LEADER does not have a valid value(left/right))
     endif
 endif
 

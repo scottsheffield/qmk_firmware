@@ -58,7 +58,7 @@
 
 /*
     The base I2C address of the EEPROM.
-    This needs to be shifted up by 1, to match i2c_master requirements.
+    This needs to be shifted up by 1, to match i2c_leader requirements.
 */
 #ifndef EXTERNAL_EEPROM_I2C_BASE_ADDRESS
 #    define EXTERNAL_EEPROM_I2C_BASE_ADDRESS 0b10100000

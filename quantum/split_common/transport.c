@@ -23,10 +23,10 @@ static pin_t encoders_pad[] = ENCODERS_PAD_A;
 
 #if defined(USE_I2C)
 
-#    include "i2c_master.h"
-#    include "i2c_slave.h"
+#    include "i2c_leader.h"
+#    include "i2c_follower.h"
 
-typedef struct _I2C_slave_buffer_t {
+typedef struct _I2C_follower_buffer_t {
     matrix_row_t smatrix[ROWS_PER_HAND];
     uint8_t      backlight_level;
 #    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_SPLIT)
@@ -35,30 +35,30 @@ typedef struct _I2C_slave_buffer_t {
 #    ifdef ENCODER_ENABLE
     uint8_t encoder_state[NUMBER_OF_ENCODERS];
 #    endif
-} I2C_slave_buffer_t;
+} I2C_follower_buffer_t;
 
-static I2C_slave_buffer_t *const i2c_buffer = (I2C_slave_buffer_t *)i2c_slave_reg;
+static I2C_follower_buffer_t *const i2c_buffer = (I2C_follower_buffer_t *)i2c_follower_reg;
 
-#    define I2C_BACKLIGHT_START offsetof(I2C_slave_buffer_t, backlight_level)
-#    define I2C_RGB_START offsetof(I2C_slave_buffer_t, rgblight_sync)
-#    define I2C_KEYMAP_START offsetof(I2C_slave_buffer_t, smatrix)
-#    define I2C_ENCODER_START offsetof(I2C_slave_buffer_t, encoder_state)
+#    define I2C_BACKLIGHT_START offsetof(I2C_follower_buffer_t, backlight_level)
+#    define I2C_RGB_START offsetof(I2C_follower_buffer_t, rgblight_sync)
+#    define I2C_KEYMAP_START offsetof(I2C_follower_buffer_t, smatrix)
+#    define I2C_ENCODER_START offsetof(I2C_follower_buffer_t, encoder_state)
 
 #    define TIMEOUT 100
 
-#    ifndef SLAVE_I2C_ADDRESS
-#        define SLAVE_I2C_ADDRESS 0x32
+#    ifndef FOLLOWER_I2C_ADDRESS
+#        define FOLLOWER_I2C_ADDRESS 0x32
 #    endif
 
 // Get rows from other half over i2c
-bool transport_master(matrix_row_t matrix[]) {
-    i2c_readReg(SLAVE_I2C_ADDRESS, I2C_KEYMAP_START, (void *)matrix, sizeof(i2c_buffer->smatrix), TIMEOUT);
+bool transport_leader(matrix_row_t matrix[]) {
+    i2c_readReg(FOLLOWER_I2C_ADDRESS, I2C_KEYMAP_START, (void *)matrix, sizeof(i2c_buffer->smatrix), TIMEOUT);
 
     // write backlight info
 #    ifdef BACKLIGHT_ENABLE
     uint8_t level = is_backlight_enabled() ? get_backlight_level() : 0;
     if (level != i2c_buffer->backlight_level) {
-        if (i2c_writeReg(SLAVE_I2C_ADDRESS, I2C_BACKLIGHT_START, (void *)&level, sizeof(level), TIMEOUT) >= 0) {
+        if (i2c_writeReg(FOLLOWER_I2C_ADDRESS, I2C_BACKLIGHT_START, (void *)&level, sizeof(level), TIMEOUT) >= 0) {
             i2c_buffer->backlight_level = level;
         }
     }
@@ -68,21 +68,21 @@ bool transport_master(matrix_row_t matrix[]) {
     if (rgblight_get_change_flags()) {
         rgblight_syncinfo_t rgblight_sync;
         rgblight_get_syncinfo(&rgblight_sync);
-        if (i2c_writeReg(SLAVE_I2C_ADDRESS, I2C_RGB_START, (void *)&rgblight_sync, sizeof(rgblight_sync), TIMEOUT) >= 0) {
+        if (i2c_writeReg(FOLLOWER_I2C_ADDRESS, I2C_RGB_START, (void *)&rgblight_sync, sizeof(rgblight_sync), TIMEOUT) >= 0) {
             rgblight_clear_change_flags();
         }
     }
 #    endif
 
 #    ifdef ENCODER_ENABLE
-    i2c_readReg(SLAVE_I2C_ADDRESS, I2C_ENCODER_START, (void *)i2c_buffer->encoder_state, sizeof(i2c_buffer->encoder_state), TIMEOUT);
+    i2c_readReg(FOLLOWER_I2C_ADDRESS, I2C_ENCODER_START, (void *)i2c_buffer->encoder_state, sizeof(i2c_buffer->encoder_state), TIMEOUT);
     encoder_update_raw(i2c_buffer->encoder_state);
 #    endif
 
     return true;
 }
 
-void transport_slave(matrix_row_t matrix[]) {
+void transport_follower(matrix_row_t matrix[]) {
     // Copy matrix to I2C buffer
     memcpy((void *)i2c_buffer->smatrix, (void *)matrix, sizeof(i2c_buffer->smatrix));
 
@@ -104,9 +104,9 @@ void transport_slave(matrix_row_t matrix[]) {
 #    endif
 }
 
-void transport_master_init(void) { i2c_init(); }
+void transport_leader_init(void) { i2c_init(); }
 
-void transport_slave_init(void) { i2c_slave_init(SLAVE_I2C_ADDRESS); }
+void transport_follower_init(void) { i2c_follower_init(FOLLOWER_I2C_ADDRESS); }
 
 #else  // USE_SERIAL
 
@@ -134,7 +134,7 @@ typedef struct _Serial_m2s_buffer_t {
 // information. In that case, define RGBLIGHT_SPLIT with info on the number
 // of LEDs on each half.
 //
-// Otherwise, if the master side MCU drives both sides RGB LED chains,
+// Otherwise, if the leader side MCU drives both sides RGB LED chains,
 // there is no need to communicate.
 
 typedef struct _Serial_rgblight_t {
@@ -150,14 +150,14 @@ volatile Serial_m2s_buffer_t serial_m2s_buffer = {};
 uint8_t volatile status0                       = 0;
 
 enum serial_transaction_id {
-    GET_SLAVE_MATRIX = 0,
+    GET_FOLLOWER_MATRIX = 0,
 #    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_SPLIT)
     PUT_RGBLIGHT,
 #    endif
 };
 
 SSTD_t transactions[] = {
-    [GET_SLAVE_MATRIX] =
+    [GET_FOLLOWER_MATRIX] =
         {
             (uint8_t *)&status0,
             sizeof(serial_m2s_buffer),
@@ -168,20 +168,20 @@ SSTD_t transactions[] = {
 #    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_SPLIT)
     [PUT_RGBLIGHT] =
         {
-            (uint8_t *)&status_rgblight, sizeof(serial_rgblight), (uint8_t *)&serial_rgblight, 0, NULL  // no slave to master transfer
+            (uint8_t *)&status_rgblight, sizeof(serial_rgblight), (uint8_t *)&serial_rgblight, 0, NULL  // no follower to leader transfer
         },
 #    endif
 };
 
-void transport_master_init(void) { soft_serial_initiator_init(transactions, TID_LIMIT(transactions)); }
+void transport_leader_init(void) { soft_serial_initiator_init(transactions, TID_LIMIT(transactions)); }
 
-void transport_slave_init(void) { soft_serial_target_init(transactions, TID_LIMIT(transactions)); }
+void transport_follower_init(void) { soft_serial_target_init(transactions, TID_LIMIT(transactions)); }
 
 #    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_SPLIT)
 
 // rgblight synchronization information communication.
 
-void transport_rgblight_master(void) {
+void transport_rgblight_leader(void) {
     if (rgblight_get_change_flags()) {
         rgblight_get_syncinfo((rgblight_syncinfo_t *)&serial_rgblight.rgblight_sync);
         if (soft_serial_transaction(PUT_RGBLIGHT) == TRANSACTION_END) {
@@ -190,7 +190,7 @@ void transport_rgblight_master(void) {
     }
 }
 
-void transport_rgblight_slave(void) {
+void transport_rgblight_follower(void) {
     if (status_rgblight == TRANSACTION_ACCEPTED) {
         rgblight_update_sync((rgblight_syncinfo_t *)&serial_rgblight.rgblight_sync, false);
         status_rgblight = TRANSACTION_END;
@@ -198,18 +198,18 @@ void transport_rgblight_slave(void) {
 }
 
 #    else
-#        define transport_rgblight_master()
-#        define transport_rgblight_slave()
+#        define transport_rgblight_leader()
+#        define transport_rgblight_follower()
 #    endif
 
-bool transport_master(matrix_row_t matrix[]) {
+bool transport_leader(matrix_row_t matrix[]) {
 #    ifndef SERIAL_USE_MULTI_TRANSACTION
     if (soft_serial_transaction() != TRANSACTION_END) {
         return false;
     }
 #    else
-    transport_rgblight_master();
-    if (soft_serial_transaction(GET_SLAVE_MATRIX) != TRANSACTION_END) {
+    transport_rgblight_leader();
+    if (soft_serial_transaction(GET_FOLLOWER_MATRIX) != TRANSACTION_END) {
         return false;
     }
 #    endif
@@ -220,7 +220,7 @@ bool transport_master(matrix_row_t matrix[]) {
     }
 
 #    ifdef BACKLIGHT_ENABLE
-    // Write backlight level for slave to read
+    // Write backlight level for follower to read
     serial_m2s_buffer.backlight_level = is_backlight_enabled() ? get_backlight_level() : 0;
 #    endif
 
@@ -231,8 +231,8 @@ bool transport_master(matrix_row_t matrix[]) {
     return true;
 }
 
-void transport_slave(matrix_row_t matrix[]) {
-    transport_rgblight_slave();
+void transport_follower(matrix_row_t matrix[]) {
+    transport_rgblight_follower();
     // TODO: if MATRIX_COLS > 8 change to pack()
     for (int i = 0; i < ROWS_PER_HAND; ++i) {
         serial_s2m_buffer.smatrix[i] = matrix[i];

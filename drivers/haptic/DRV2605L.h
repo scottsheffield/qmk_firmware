@@ -16,7 +16,7 @@
  */
 
 #pragma once
-#include "i2c_master.h"
+#include "i2c_leader.h"
 
 /* Initialization settings
 

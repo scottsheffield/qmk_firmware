@@ -31,10 +31,10 @@ typedef enum {
 	Ready,
 	Initializing,
 	RepeatedStartSent,
-	MasterTransmitter,
-	MasterReceiver,
+	LeaderTransmitter,
+	LeaderReceiver,
 	SlaceTransmitter,
-	SlaveReciever
+	FollowerReciever
 	} TWIMode;
 
  typedef struct TWIInfoStruct{
@@ -48,12 +48,12 @@ TWIInfoStruct TWIInfo;
 // TWI Status Codes
 #define TWI_START_SENT			0x08 // Start sent
 #define TWI_REP_START_SENT		0x10 // Repeated Start sent
-// Master Transmitter Mode
+// Leader Transmitter Mode
 #define TWI_MT_SLAW_ACK			0x18 // SLA+W sent and ACK received
 #define TWI_MT_SLAW_NACK		0x20 // SLA+W sent and NACK received
 #define TWI_MT_DATA_ACK			0x28 // DATA sent and ACK received
 #define TWI_MT_DATA_NACK		0x30 // DATA sent and NACK received
-// Master Receiver Mode
+// Leader Receiver Mode
 #define TWI_MR_SLAR_ACK			0x40 // SLA+R sent, ACK received
 #define TWI_MR_SLAR_NACK		0x48 // SLA+R sent, NACK received
 #define TWI_MR_DATA_ACK			0x50 // Data received, ACK returned
@@ -69,8 +69,8 @@ TWIInfoStruct TWIInfo;
 #define TWISendStart()		(TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN)|(1<<TWIE)) // Send the START signal, enable interrupts and TWI, clear TWINT flag to resume transfer.
 #define TWISendStop()		(TWCR = (1<<TWINT)|(1<<TWSTO)|(1<<TWEN)|(1<<TWIE)) // Send the STOP signal, enable interrupts and TWI, clear TWINT flag.
 #define TWISendTransmit()	(TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWIE)) // Used to resume a transfer, clear TWINT and ensure that TWI and interrupts are enabled.
-#define TWISendACK()		(TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWIE)|(1<<TWEA)) // FOR MR mode. Resume a transfer, ensure that TWI and interrupts are enabled and respond with an ACK if the device is addressed as a slave or after it receives a byte.
-#define TWISendNACK()		(TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWIE)) // FOR MR mode. Resume a transfer, ensure that TWI and interrupts are enabled but DO NOT respond with an ACK if the device is addressed as a slave or after it receives a byte.
+#define TWISendACK()		(TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWIE)|(1<<TWEA)) // FOR MR mode. Resume a transfer, ensure that TWI and interrupts are enabled and respond with an ACK if the device is addressed as a follower or after it receives a byte.
+#define TWISendNACK()		(TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWIE)) // FOR MR mode. Resume a transfer, ensure that TWI and interrupts are enabled but DO NOT respond with an ACK if the device is addressed as a follower or after it receives a byte.
 
 // Function declarations
 void TWITransmitData(void *const TXdata, uint8_t dataLen, uint8_t repStart, uint8_t blocking);

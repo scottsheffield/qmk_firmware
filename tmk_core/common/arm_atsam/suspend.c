@@ -1,5 +1,5 @@
 #include "matrix.h"
-#include "i2c_master.h"
+#include "i2c_leader.h"
 #include "led_matrix.h"
 #include "suspend.h"
 

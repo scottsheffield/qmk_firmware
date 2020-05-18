@@ -72,37 +72,37 @@
 //////////////// for backward compatibility ////////////////////////////////
 #if !defined(SERIAL_USE_SINGLE_TRANSACTION) && !defined(SERIAL_USE_MULTI_TRANSACTION)
 /* --- USE OLD API (compatible with let's split serial.c) */
-  #if SERIAL_SLAVE_BUFFER_LENGTH > 0
-  uint8_t volatile serial_slave_buffer[SERIAL_SLAVE_BUFFER_LENGTH] = {0};
+  #if SERIAL_FOLLOWER_BUFFER_LENGTH > 0
+  uint8_t volatile serial_follower_buffer[SERIAL_FOLLOWER_BUFFER_LENGTH] = {0};
   #endif
-  #if SERIAL_MASTER_BUFFER_LENGTH > 0
-  uint8_t volatile serial_master_buffer[SERIAL_MASTER_BUFFER_LENGTH] = {0};
+  #if SERIAL_LEADER_BUFFER_LENGTH > 0
+  uint8_t volatile serial_leader_buffer[SERIAL_LEADER_BUFFER_LENGTH] = {0};
   #endif
   uint8_t volatile status0 = 0;
 
 SSTD_t transactions[] = {
     { (uint8_t *)&status0,
-  #if SERIAL_MASTER_BUFFER_LENGTH > 0
-      sizeof(serial_master_buffer), (uint8_t *)serial_master_buffer,
+  #if SERIAL_LEADER_BUFFER_LENGTH > 0
+      sizeof(serial_leader_buffer), (uint8_t *)serial_leader_buffer,
   #else
       0, (uint8_t *)NULL,
   #endif
-  #if SERIAL_SLAVE_BUFFER_LENGTH > 0
-      sizeof(serial_slave_buffer), (uint8_t *)serial_slave_buffer
+  #if SERIAL_FOLLOWER_BUFFER_LENGTH > 0
+      sizeof(serial_follower_buffer), (uint8_t *)serial_follower_buffer
   #else
       0, (uint8_t *)NULL,
   #endif
   }
 };
 
-void serial_master_init(void)
+void serial_leader_init(void)
 { soft_serial_initiator_init(transactions, TID_LIMIT(transactions)); }
 
-void serial_slave_init(void)
+void serial_follower_init(void)
 { soft_serial_target_init(transactions, TID_LIMIT(transactions)); }
 
 // 0 => no error
-// 1 => slave did not respond
+// 1 => follower did not respond
 // 2 => checksum error
 int serial_update_buffers()
 {
@@ -212,12 +212,12 @@ int serial_update_buffers()
 #define SERIAL_DELAY_HALF1 (SERIAL_DELAY/2)
 #define SERIAL_DELAY_HALF2 (SERIAL_DELAY - SERIAL_DELAY/2)
 
-#define SLAVE_INT_WIDTH_US 1
+#define FOLLOWER_INT_WIDTH_US 1
 #ifndef SERIAL_USE_MULTI_TRANSACTION
-  #define SLAVE_INT_RESPONSE_TIME SERIAL_DELAY
+  #define FOLLOWER_INT_RESPONSE_TIME SERIAL_DELAY
 #else
-  #define SLAVE_INT_ACK_WIDTH_UNIT 2
-  #define SLAVE_INT_ACK_WIDTH 4
+  #define FOLLOWER_INT_ACK_WIDTH_UNIT 2
+  #define FOLLOWER_INT_ACK_WIDTH 4
 #endif
 
 static SSTD_t *Transaction_table = NULL;
@@ -436,7 +436,7 @@ ISR(SERIAL_PIN_INTERRUPT) {
 
   serial_high(); // response step1 low->high
   serial_output();
-  _delay_sub_us(SLAVE_INT_ACK_WIDTH_UNIT*SLAVE_INT_ACK_WIDTH);
+  _delay_sub_us(FOLLOWER_INT_ACK_WIDTH_UNIT*FOLLOWER_INT_ACK_WIDTH);
   SSTD_t *trans = &Transaction_table[tid];
   serial_low(); // response step2 ack high->low
 #endif
@@ -487,12 +487,12 @@ int  soft_serial_transaction(int sstd_index) {
   // signal to the target that we want to start a transaction
   serial_output();
   serial_low();
-  _delay_us(SLAVE_INT_WIDTH_US);
+  _delay_us(FOLLOWER_INT_WIDTH_US);
 
 #ifndef SERIAL_USE_MULTI_TRANSACTION
   // wait for the target response
   serial_input_with_pullup();
-  _delay_us(SLAVE_INT_RESPONSE_TIME);
+  _delay_us(FOLLOWER_INT_RESPONSE_TIME);
 
   // check if the target is present
   if (serial_read_pin()) {
@@ -520,15 +520,15 @@ int  soft_serial_transaction(int sstd_index) {
 
   // check if the target is present (step2 high->low)
   for( int i = 0; serial_read_pin(); i++ ) {
-      if (i > SLAVE_INT_ACK_WIDTH + 1) {
-          // slave failed to pull the line low, assume not present
+      if (i > FOLLOWER_INT_ACK_WIDTH + 1) {
+          // follower failed to pull the line low, assume not present
           serial_output();
           serial_high();
           *trans->status = TRANSACTION_NO_RESPONSE;
           sei();
           return TRANSACTION_NO_RESPONSE;
       }
-      _delay_sub_us(SLAVE_INT_ACK_WIDTH_UNIT);
+      _delay_sub_us(FOLLOWER_INT_ACK_WIDTH_UNIT);
   }
 #endif
 
@@ -577,7 +577,7 @@ int soft_serial_get_and_clean_status(int sstd_index) {
 
 // Helix serial.c history
 //   2018-1-29 fork from let's split and add PD2, modify sync_recv() (#2308, bceffdefc)
-//   2018-6-28 bug fix master to slave comm and speed up (#3255, 1038bbef4)
+//   2018-6-28 bug fix leader to follower comm and speed up (#3255, 1038bbef4)
 //             (adjusted with avr-gcc 4.9.2)
 //   2018-7-13 remove USE_SERIAL_PD2 macro (#3374, f30d6dd78)
 //             (adjusted with avr-gcc 4.9.2)

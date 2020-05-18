@@ -47,7 +47,7 @@ extern matrix_row_t matrix[MATRIX_ROWS];      // debounced values
 uint8_t thisHand, thatHand;
 
 // user-defined overridable functions
-__attribute__((weak)) void matrix_slave_scan_user(void) {}
+__attribute__((weak)) void matrix_follower_scan_user(void) {}
 
 // matrix code
 
@@ -236,10 +236,10 @@ void matrix_init(void) {
 }
 
 void matrix_post_scan(void) {
-    if (is_keyboard_master()) {
+    if (is_keyboard_leader()) {
         static uint8_t error_count;
 
-        if (!transport_master(matrix + thatHand)) {
+        if (!transport_leader(matrix + thatHand)) {
             error_count++;
 
             if (error_count > ERROR_DISCONNECT_COUNT) {
@@ -254,11 +254,11 @@ void matrix_post_scan(void) {
 
         matrix_scan_quantum();
     } else {
-        transport_slave(matrix + thisHand);
+        transport_follower(matrix + thisHand);
 #ifdef ENCODER_ENABLE
         encoder_read();
 #endif
-        matrix_slave_scan_user();
+        matrix_follower_scan_user();
     }
 }
 

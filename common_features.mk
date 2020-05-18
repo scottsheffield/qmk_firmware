@@ -115,7 +115,7 @@ else
   else ifeq ($(strip $(EEPROM_DRIVER)), i2c)
     OPT_DEFS += -DEEPROM_DRIVER -DEEPROM_I2C
     COMMON_VPATH += $(DRIVER_PATH)/eeprom
-    QUANTUM_LIB_SRC += i2c_master.c
+    QUANTUM_LIB_SRC += i2c_leader.c
     SRC += eeprom_driver.c eeprom_i2c.c
   else ifeq ($(strip $(EEPROM_DRIVER)), transient)
     OPT_DEFS += -DEEPROM_DRIVER -DEEPROM_TRANSIENT
@@ -187,7 +187,7 @@ ifeq ($(strip $(LED_MATRIX_ENABLE)), IS31FL3731)
     OPT_DEFS += -DIS31FL3731
     COMMON_VPATH += $(DRIVER_PATH)/issi
     SRC += is31fl3731-simple.c
-    QUANTUM_LIB_SRC += i2c_master.c
+    QUANTUM_LIB_SRC += i2c_leader.c
 endif
 
 RGB_MATRIX_ENABLE ?= no
@@ -212,21 +212,21 @@ ifeq ($(strip $(RGB_MATRIX_ENABLE)), IS31FL3731)
     OPT_DEFS += -DIS31FL3731 -DSTM32_I2C -DHAL_USE_I2C=TRUE
     COMMON_VPATH += $(DRIVER_PATH)/issi
     SRC += is31fl3731.c
-    QUANTUM_LIB_SRC += i2c_master.c
+    QUANTUM_LIB_SRC += i2c_leader.c
 endif
 
 ifeq ($(strip $(RGB_MATRIX_ENABLE)), IS31FL3733)
     OPT_DEFS += -DIS31FL3733 -DSTM32_I2C -DHAL_USE_I2C=TRUE
     COMMON_VPATH += $(DRIVER_PATH)/issi
     SRC += is31fl3733.c
-    QUANTUM_LIB_SRC += i2c_master.c
+    QUANTUM_LIB_SRC += i2c_leader.c
 endif
 
 ifeq ($(strip $(RGB_MATRIX_ENABLE)), IS31FL3737)
     OPT_DEFS += -DIS31FL3737 -DSTM32_I2C -DHAL_USE_I2C=TRUE
     COMMON_VPATH += $(DRIVER_PATH)/issi
     SRC += is31fl3737.c
-    QUANTUM_LIB_SRC += i2c_master.c
+    QUANTUM_LIB_SRC += i2c_leader.c
 endif
 
 ifeq ($(strip $(RGB_MATRIX_ENABLE)), WS2812)
@@ -337,7 +337,7 @@ ifeq ($(strip $(WS2812_DRIVER_REQUIRED)), yes)
 
     # add extra deps
     ifeq ($(strip $(WS2812_DRIVER)), i2c)
-        QUANTUM_LIB_SRC += i2c_master.c
+        QUANTUM_LIB_SRC += i2c_leader.c
     endif
 endif
 
@@ -383,7 +383,7 @@ endif
 
 ifneq ($(filter DRV2605L, $(HAPTIC_ENABLE)), )
     SRC += DRV2605L.c
-    QUANTUM_LIB_SRC += i2c_master.c
+    QUANTUM_LIB_SRC += i2c_leader.c
     OPT_DEFS += -DDRV2605L
 endif
 
@@ -478,8 +478,8 @@ ifeq ($(strip $(SPLIT_KEYBOARD)), yes)
         # Functions added via QUANTUM_LIB_SRC are only included in the final binary if they're called.
         # Unused functions are pruned away, which is why we can add multiple drivers here without bloat.
         ifeq ($(PLATFORM),AVR)
-            QUANTUM_LIB_SRC += i2c_master.c \
-                               i2c_slave.c
+            QUANTUM_LIB_SRC += i2c_leader.c \
+                               i2c_follower.c
         endif
 
         SERIAL_DRIVER ?= bitbang
@@ -495,7 +495,7 @@ endif
 ifeq ($(strip $(OLED_DRIVER_ENABLE)), yes)
     OPT_DEFS += -DOLED_DRIVER_ENABLE
     COMMON_VPATH += $(DRIVER_PATH)/oled
-    QUANTUM_LIB_SRC += i2c_master.c
+    QUANTUM_LIB_SRC += i2c_leader.c
     SRC += oled_driver.c
 endif
 

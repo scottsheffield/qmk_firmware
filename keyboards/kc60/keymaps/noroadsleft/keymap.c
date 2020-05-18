@@ -148,7 +148,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 if ( get_mods() & MOD_MASK_SHIFT ) {
                     clear_mods();
-                    SEND_STRING("master");
+                    SEND_STRING("leader");
                 } else {
                     SEND_STRING("$(git branch-name)");
                 }

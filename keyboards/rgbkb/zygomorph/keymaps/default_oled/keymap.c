@@ -119,7 +119,7 @@ void encoder_update_user(uint8_t index, bool clockwise) {
     } else {
       tap_code(KC_PGUP);
     }
-  } else if (index == 1) { /* Second encoder from slave */
+  } else if (index == 1) { /* Second encoder from follower */
     if (clockwise) {
       tap_code(KC_UP);
     } else {
@@ -222,7 +222,7 @@ static void render_status(void) {
 }
 
 void oled_task_user(void) {
-  if (is_keyboard_master()) {
+  if (is_keyboard_leader()) {
     render_status();
   } else {
     render_logo();

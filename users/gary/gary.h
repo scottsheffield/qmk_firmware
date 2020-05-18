@@ -2,7 +2,7 @@
 
 #pragma once
 #define USE_SERIAL
-#define MASTER_LEFT
+#define LEADER_LEFT
 
 // Layers
 // #define BASE 0 // Base layer

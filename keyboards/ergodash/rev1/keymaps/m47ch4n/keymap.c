@@ -102,7 +102,7 @@ float tone_qwerty[][2] = SONG(QWERTY_SOUND);
 #define JP_LAYOUT true
 #define US_LAYOUT false
 
-#ifdef MASTER_LEFT
+#ifdef LEADER_LEFT
 bool LAYOUT_STATUS = US_LAYOUT;
 #else
 bool LAYOUT_STATUS = JP_LAYOUT;

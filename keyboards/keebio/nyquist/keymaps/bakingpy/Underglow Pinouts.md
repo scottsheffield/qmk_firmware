@@ -1,6 +1,6 @@
 # Let's Split RGB Underglow
 
-## Master
+## Leader
 
 ### Pro Micro
 - Red: LED +5V -> Pro Micro VCC
@@ -12,7 +12,7 @@
 - Green: LED Do  -> PCB Extra Data
 - Black: LED GND -> PCB GND
 
-## Slave
+## Follower
 
 ### TRRS
 - Red: LED +5V -> PCB VCC

@@ -22,7 +22,7 @@ SOFTWARE.
 */
 
 #include "matrix.h"
-#include "i2c_master.h"
+#include "i2c_leader.h"
 #include "quantum.h"
 
 #define VIBRATE_LENGTH 50 //Defines number of interrupts motor will vibrate for, must be bigger than 8 for correct operation

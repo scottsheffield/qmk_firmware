@@ -1,6 +1,6 @@
 # XMMX
 
-XMMX is a Tenkeyless Mechanical Keyboard PCB designed to fit Filco Majestouch TKL and Cooler Master Quickfire Rapid cases. 
+XMMX is a Tenkeyless Mechanical Keyboard PCB designed to fit Filco Majestouch TKL and Cooler Leader Quickfire Rapid cases. 
 
 XMMX schematic and PCB are available opensource under Creative Commons BY-SA 3.0 license on EasyEDA at [this link](https://easyeda.com/farmakon/XMMX-0447d28c1e4644b88fd04905d983684d).
 

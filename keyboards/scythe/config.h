@@ -226,7 +226,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Serial settings */
 #define USE_SERIAL
 //#define EE_HANDS
-#define I2C_MASTER_LEFT
-//#define I2C_MASTER_RIGHT
+#define I2C_LEADER_LEFT
+//#define I2C_LEADER_RIGHT
 
 #define TAPPING_TERM    120

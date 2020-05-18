@@ -110,26 +110,26 @@ uint8_t pwm_register_array[9] = {0};
 msg_t is31_select_page(uint8_t page) {
   tx[0] = IS31_COMMANDREGISTER;
   tx[1] = page;
-  return i2cMasterTransmitTimeout(&I2CD1, IS31_ADDR_DEFAULT, tx, 2, NULL, 0, US2ST(IS31_TIMEOUT));
+  return i2cLeaderTransmitTimeout(&I2CD1, IS31_ADDR_DEFAULT, tx, 2, NULL, 0, US2ST(IS31_TIMEOUT));
 }
 
 msg_t is31_write_data(uint8_t page, uint8_t *buffer, uint8_t size) {
   is31_select_page(page);
-  return i2cMasterTransmitTimeout(&I2CD1, IS31_ADDR_DEFAULT, buffer, size, NULL, 0, US2ST(IS31_TIMEOUT));
+  return i2cLeaderTransmitTimeout(&I2CD1, IS31_ADDR_DEFAULT, buffer, size, NULL, 0, US2ST(IS31_TIMEOUT));
 }
 
 msg_t is31_write_register(uint8_t page, uint8_t reg, uint8_t data) {
   is31_select_page(page);
   tx[0] = reg;
   tx[1] = data;
-  return i2cMasterTransmitTimeout(&I2CD1, IS31_ADDR_DEFAULT, tx, 2, NULL, 0, US2ST(IS31_TIMEOUT));
+  return i2cLeaderTransmitTimeout(&I2CD1, IS31_ADDR_DEFAULT, tx, 2, NULL, 0, US2ST(IS31_TIMEOUT));
 }
 
 msg_t is31_read_register(uint8_t page, uint8_t reg, uint8_t *result) {
   is31_select_page(page);
 
   tx[0] = reg;
-  return i2cMasterTransmitTimeout(&I2CD1, IS31_ADDR_DEFAULT, tx, 1, result, 1, US2ST(IS31_TIMEOUT));
+  return i2cLeaderTransmitTimeout(&I2CD1, IS31_ADDR_DEFAULT, tx, 1, result, 1, US2ST(IS31_TIMEOUT));
 }
 
 /* ========================

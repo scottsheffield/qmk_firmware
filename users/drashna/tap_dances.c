@@ -9,7 +9,7 @@ diablo_timer_t diablo_timer[NUM_OF_DIABLO_KEYS];
 uint8_t diablo_times[] = {0, 1, 3, 5, 10, 30};
 
 // Cycle through the times for the macro, starting at 0, for disabled.
-void diablo_tapdance_master(qk_tap_dance_state_t *state, void *user_data) {
+void diablo_tapdance_leader(qk_tap_dance_state_t *state, void *user_data) {
     diable_keys_t *diablo_keys = (diable_keys_t *)user_data;
     // Sets the keycode based on the index
     diablo_timer[diablo_keys->index].keycode = diablo_keys->keycode;
@@ -26,7 +26,7 @@ void diablo_tapdance_master(qk_tap_dance_state_t *state, void *user_data) {
 // clang-format off
 // One function to rule them all!!  Where the Magic Sauce lies
 #define ACTION_TAP_DANCE_DIABLO(index, keycode) {  \
-    .fn = { NULL, (void *)diablo_tapdance_master, NULL }, \
+    .fn = { NULL, (void *)diablo_tapdance_leader, NULL }, \
     .user_data = (void *)&((diable_keys_t) { index, keycode }),  \
   }
 // clang-format on

@@ -30,8 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // You can override the defaults (rev1 doesn't support SPLIT_HAND_PIN)
 //#define EE_HANDS
-//#define MASTER_LEFT
-//#define MASTER_RIGHT
+//#define LEADER_LEFT
+//#define LEADER_RIGHT
 
 
 #ifdef AUDIO_ENABLE

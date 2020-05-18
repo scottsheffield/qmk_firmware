@@ -3,13 +3,13 @@
 #include "layer.h"
 
 // [Init Variables] ----------------------------------------------------------//
-extern uint8_t is_master;
+extern uint8_t is_leader;
 // Oled timer similar to Drashna's
 static uint32_t oled_timer = 0;
 // Boolean to store LED state
 bool user_led_enabled = true;
-// Boolean to store the master LED clear so it only runs once.
-bool master_oled_cleared = false;
+// Boolean to store the leader LED clear so it only runs once.
+bool leader_oled_cleared = false;
 
 // [Keymaps] -----------------------------------------------------------------//
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -90,7 +90,7 @@ void matrix_scan_user(void) {
      // Iddle timer to return to default layer if left on game layer
      if (timer_elapsed32(oled_timer) > 380000 && timer_elapsed32(oled_timer) < 479999) {
          // Reset layer in case it got left on _GAME
-         // This prevents the issue where the master side sometimes wont switch off as expected
+         // This prevents the issue where the leader side sometimes wont switch off as expected
          // in the next step.
          if (get_highest_layer(layer_state) == _GAME) {
              layer_off(_GAME);
@@ -142,8 +142,8 @@ void render_logo(void) {
     oled_write(read_logo(), false);
 }
 
-// Master OLED Screen (Left Hand )
-void render_master_oled(void) {
+// Leader OLED Screen (Left Hand )
+void render_leader_oled(void) {
     // Switch display based on Layer
     switch (get_highest_layer(layer_state)){
         case _GAME:
@@ -166,8 +166,8 @@ void render_master_oled(void) {
     }
 }
 
-// Slave OLED scren (Right Hand)
-void render_slave_oled(void) {
+// Follower OLED scren (Right Hand)
+void render_follower_oled(void) {
     render_logo();
 }
 
@@ -176,10 +176,10 @@ void oled_task_user(void) {
     // First time out switches to logo as first indication of iddle.
     if (timer_elapsed32(oled_timer) > 100000 && timer_elapsed32(oled_timer) < 479999) {
         // Render logo on both halves before full timeout
-        if (is_master && !master_oled_cleared) {
-            // Clear master OLED once so the logo renders properly
+        if (is_leader && !leader_oled_cleared) {
+            // Clear leader OLED once so the logo renders properly
             oled_clear();
-            master_oled_cleared = true;
+            leader_oled_cleared = true;
         }
         render_logo();
         return;
@@ -193,7 +193,7 @@ void oled_task_user(void) {
     else {
         oled_on();
         // Reset OLED Clear flag
-        master_oled_cleared = false;
+        leader_oled_cleared = false;
         // Show logo when USB dormant
         switch (USB_DeviceState) {
             case DEVICE_STATE_Unattached:
@@ -202,10 +202,10 @@ void oled_task_user(void) {
                 render_logo();
                 break;
             default:
-                if (is_master) {
-                    render_master_oled();
+                if (is_leader) {
+                    render_leader_oled();
                 } else {
-                    render_slave_oled();
+                    render_follower_oled();
                 }
         }
     }

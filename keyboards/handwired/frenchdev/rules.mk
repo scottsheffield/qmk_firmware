@@ -32,5 +32,5 @@ RGBLIGHT_ENABLE = no
 API_SYSEX_ENABLE = no
 
 # project specific files
-SRC = i2c_master.c \
+SRC = i2c_leader.c \
 	  matrix.c

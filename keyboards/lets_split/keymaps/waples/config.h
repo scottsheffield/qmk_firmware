@@ -8,8 +8,8 @@
 // #define USE_I2C
 
 /* Select hand configuration */
-//	#define MASTER_LEFT
-//  #define MASTER_RIGHT
+//	#define LEADER_LEFT
+//  #define LEADER_RIGHT
 #define EE_HANDS              // We like to have choices I guess
 
 #endif

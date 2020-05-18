@@ -8,7 +8,7 @@
 //assign the right code to your layers for OLED display
 #define L_BASE 0
 
-extern uint8_t is_master;
+extern uint8_t is_leader;
 extern bool japanese_mode;
 
 // method prototypes defined in crkbd/lib

@@ -34,7 +34,7 @@
 #        include "is31fl3731-simple.h"
 #    endif
 
-#    include "i2c_master.h"
+#    include "i2c_leader.h"
 
 static void init(void) {
     i2c_init();

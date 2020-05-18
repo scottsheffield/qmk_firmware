@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* This library follows the convention of the AVR i2c_master library.
+/* This library follows the convention of the AVR i2c_leader library.
  * As a result addresses are expected to be already shifted (addr << 1).
  * I2CD1 is the default driver which corresponds to pins B6 and B7. This
  * can be changed.

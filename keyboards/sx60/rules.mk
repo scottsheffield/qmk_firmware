@@ -27,5 +27,5 @@ RGBLIGHT_ENABLE ?= no
 CUSTOM_MATRIX ?= yes
 
 # project specific files
-SRC =  twimaster.c \
+SRC =  twileader.c \
   matrix.c

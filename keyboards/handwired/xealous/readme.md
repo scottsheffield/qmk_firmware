@@ -101,7 +101,7 @@ From the top level `qmk_firmware` directory run `make KEYBOARD:KEYMAP:avrdude` f
 Example: `make handwired/xeal60/rev1:default:avrdude`
 
 
-Choosing which board to plug the USB cable into (choosing Master)
+Choosing which board to plug the USB cable into (choosing Leader)
 --------
 Because the two boards are identical, the firmware has logic to differentiate the left and right board.
 
@@ -111,16 +111,16 @@ The EEPROM approach requires additional setup (flashing the eeprom) but allows y
 
 The USB cable approach is easier to setup and if you just want the usb cable on the left board, you do not need to do anything extra.
 
-### Setting the left hand as master
-If you always plug the usb cable into the left board, nothing extra is needed as this is the default. Comment out `EE_HANDS` and comment out `I2C_MASTER_RIGHT` or `MASTER_RIGHT` if for some reason it was set.
+### Setting the left hand as leader
+If you always plug the usb cable into the left board, nothing extra is needed as this is the default. Comment out `EE_HANDS` and comment out `I2C_LEADER_RIGHT` or `LEADER_RIGHT` if for some reason it was set.
 
-### Setting the right hand as master
+### Setting the right hand as leader
 If you always plug the usb cable into the right board, add an extra flag to your `config.h`
 ```
- #define MASTER_RIGHT
+ #define LEADER_RIGHT
 ```
 
-### Setting EE_hands to use either hands as master
+### Setting EE_hands to use either hands as leader
 If you define `EE_HANDS` in your `config.h`, you will need to set the
 EEPROM for the left and right halves.
 
@@ -157,7 +157,7 @@ Notes on Using Pro Micro 3.3V
 Do update the `F_CPU` parameter in `rules.mk` to `8000000` which reflects
 the frequency on the 3.3V board.
 
-Also, if the slave board is producing weird characters in certain columns,
+Also, if the follower board is producing weird characters in certain columns,
 update the following line in `matrix.c` to the following:
 
 ```

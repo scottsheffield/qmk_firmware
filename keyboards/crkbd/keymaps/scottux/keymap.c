@@ -1,11 +1,11 @@
 #include QMK_KEYBOARD_H
 #include "bootloader.h"
 #ifdef PROTOCOL_LUFA
-#include "lufa.h"
-#include "split_util.h"
+  #include "lufa.h"
+  #include "split_util.h"
 #endif
 #ifdef SSD1306OLED
-#include "ssd1306.h"
+  #include "ssd1306.h"
 #endif
 #ifdef CONSOLE_ENABLED
 #include <print.h>
@@ -109,7 +109,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_RAISE] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
-        TAB,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,  BSPC,\
+        TAB,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
         GRV, XXXXX,  HOME,  PGDN,  PGUP,   END,                  XXXXX,  LEFT,  DOWN,    UP, RIGHT, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
@@ -171,9 +171,18 @@ void update_tri_layer_RGB(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
   }
 }
 
+#ifdef SSD1306OLED
+// Attempting to store and manipulate these locations later
+  char franzUpper[15] =  "\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x80\x80";
+  char franzLower[15] =  "\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\x80\x80";
+  char tormerUpper[15] = "\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce";   
+  char tormerLower[15] = "\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee";
+
+#endif
+
 #ifdef RGBLIGHT_ENABLE
 bool using_theme = false;
-bool selected_theme = false;
+int selected_theme = 0;
 uint8_t current_underglow = 0;
 const uint8_t cyber_sat = 255;
 const uint8_t cyber_val = 180;
@@ -181,13 +190,19 @@ rgblight_theme_t cybersunset = {
   .mode=5,
   .hue=35,
   .underglow=10,
-  .gradient_stops=3,
+  .gradient_stops=4
 };
 rgblight_theme_t cyberdawn = {
   .mode=4,
   .hue=110,
   .underglow=210,
-  .gradient_stops=4,
+  .gradient_stops=3
+};
+rgblight_theme_t neonnight = {
+  .mode=4,
+  .hue=66,
+  .underglow=248,
+  .gradient_stops=3
 };
 
 void set_underglow(uint8_t underglow_hue, uint8_t sat, uint8_t val) {
@@ -238,13 +253,24 @@ void set_theme_cyberdawn(void) {
     cyberdawn.underglow
   );
 }
+void set_theme_neonnight(void) {
+  set_theme(
+    neonnight.mode,
+    neonnight.hue,
+    cyber_sat,
+    rgblight_config.val,
+    neonnight.underglow
+  );
+}
 void toggle_theme(void) {
-  if (selected_theme) {
+  if (selected_theme == 0) {
     set_theme_cyberdawn();
-  } else {
+  } else if (selected_theme == 1) {
     set_theme_cybersunset();
+  } else if (selected_theme == 2) {
+    set_theme_neonnight();
   }
-  selected_theme = !selected_theme;
+  selected_theme = (selected_theme + 1) % 3;
 }
 void toggle_theme_and_eeprom(void) {
   toggle_theme();
@@ -280,53 +306,40 @@ void matrix_init_user(void) {
 //SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
 #ifdef SSD1306OLED
 
-// When add source files to SRC in rules.mk, you can use functions.
-const char *read_layer_state(void);
-const char *read_logo(void);
-void set_keylog(uint16_t keycode, keyrecord_t *record);
-const char *read_keylog(void);
-const char *read_keylogs(void);
-
-const char *read_mode_icon(bool swap);
-const char *read_host_led_state(void);
-void set_timelog(void);
-const char *read_timelog(void);
-char buffer[4];
-
 void matrix_scan_user(void) {
    iota_gfx_task();
 }
-
-void debug_backlight_info(struct CharacterMatrix *matrix) {
-  itoa(rgblight_get_hue(), buffer, 10);
-  matrix_write(matrix, "h: ");
-  matrix_write(matrix, buffer);
-  itoa(rgblight_get_mode(), buffer, 10);
-  matrix_write(matrix, " m: ");
-  matrix_write(matrix, buffer);
-  itoa(rgblight_get_sat(), buffer, 10);
-  matrix_write(matrix, " s: ");
-  matrix_write_ln(matrix, buffer);
-  itoa(rgblight_get_val(), buffer, 10);
-  matrix_write(matrix, "v: ");
-  matrix_write(matrix, buffer);
-  itoa(current_underglow, buffer, 10);
-  matrix_write(matrix, " u: ");
-  matrix_write_ln(matrix, buffer);
-}
+char matrixBuffer[161];
 
 void matrix_render_user(struct CharacterMatrix *matrix) {
   if (is_leader) {
-    // If you want to change the display of OLED, you need to change here
-    matrix_write_ln(matrix, read_layer_state());
-    // matrix_write_ln(matrix, read_keylog());
-    // matrix_write_ln(matrix, read_keylogs());
-    //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
-    debug_backlight_info(matrix);
-    matrix_write_ln(matrix, read_timelog());
+    // switch (layer_state) {
+    //   case _QWERTY:
+    //   case _LOWER:
+    //   case _RAISE:
+    //   case _ADJUST:
+    //   case _GAMER: 
+    //   case _GAMER_MOD:
+    // }
+
+    // Trying to composit the image
+    // sprintf(matrixBuffer, "%s\n%s\n%s\n%s", franzUpper, franzLower, tormerUpper, tormerLower);
+    // matrix_write_P(matrix, matrixBuffer);
+
+    // Relying on the old good good
+    matrix_write_P(matrix, PSTR(
+      "\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\n"
+      "\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\n"
+      "\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\n"
+      "\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef"
+    ));
   } else {
-    // matrix_write(matrix, read_logo());
-    matrix_write_ln(matrix, read_timelog());
+    matrix_write_P(matrix, PSTR(
+      "\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\n"
+      "\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\n"
+      "\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\n"
+      "\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef"
+    ));
   }
 }
 
@@ -336,6 +349,7 @@ void matrix_update(struct CharacterMatrix *dest, const struct CharacterMatrix *s
     dest->dirty = true;
   }
 }
+
 
 void iota_gfx_task_user(void) {
   struct CharacterMatrix matrix;
@@ -348,12 +362,18 @@ void iota_gfx_task_user(void) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
 #ifdef SSD1306OLED
-    set_keylog(keycode, record);
 #endif
-    set_timelog();
   }
 #ifdef CONSOLE_ENABLE
   uprintf("KL: kc: %u, col: %u, row: %u, pressed: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed);
+  uprintf("M: %u, H: %u, V: %u, U: %u", rgblight_get_mode(), rgblight_get_hue(), rgblight_get_val(), current_underglow);
+  // uprintf("a sample length from this string I guess: %u", strlen(matrixBuffer));
+  // uprintf("honestly, what the fuck is in this thing, here's index 0: %c", matrixBuffer[0]);
+  // uprintf("franzUpper: %s | franzLower: %s | tormerUpper: %s | tormerLower: %s", franzUpper, franzLower, tormerUpper, tormerLower);
+  // uprintf("\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\n"
+  //     "\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\n"
+  //     "\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\n"
+  //     "\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef");
 #endif 
 
   switch (keycode) {

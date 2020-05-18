@@ -2,7 +2,7 @@
 
 #include "quantum.h"
 #include <stdint.h>
-#include "i2c_master.h"
+#include "i2c_leader.h"
 #include <util/delay.h>
 
 #define MCP23017

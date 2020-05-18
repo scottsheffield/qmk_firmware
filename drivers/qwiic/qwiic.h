@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "i2c_master.h"
+#include "i2c_leader.h"
 
 #ifdef QWIIC_JOYSTIIC_ENABLE
 #    include "joystiic.h"

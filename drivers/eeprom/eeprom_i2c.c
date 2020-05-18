@@ -31,7 +31,7 @@
 */
 
 #include "wait.h"
-#include "i2c_master.h"
+#include "i2c_leader.h"
 #include "eeprom.h"
 #include "eeprom_i2c.h"
 

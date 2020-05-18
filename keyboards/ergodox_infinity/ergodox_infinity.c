@@ -126,8 +126,8 @@ void matrix_scan_kb(void) {
 	matrix_scan_user();
 }
 
-bool is_keyboard_master(void) {
-    return is_serial_link_master();
+bool is_keyboard_leader(void) {
+    return is_serial_link_leader();
 }
 
 __attribute__ ((weak))

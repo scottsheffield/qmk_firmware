@@ -48,14 +48,14 @@ void render_status(void) {
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (is_keyboard_master())
+  if (is_keyboard_leader())
     return OLED_ROTATION_270;  // flips the display 270 degrees if mainhand
   return rotation;
 }
 
 __attribute__((weak))
 void oled_task_user(void) {
-  if (is_keyboard_master()) {
+  if (is_keyboard_leader()) {
     render_status();
   } else {
     render_logo();

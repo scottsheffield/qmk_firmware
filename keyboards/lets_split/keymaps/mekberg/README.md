@@ -42,7 +42,7 @@ N/A
 
 ### EE_HANDS
 
-Prepared for EEPROM settings and different keymaps depending on USB port connected, but default master side remains left regardless.
+Prepared for EEPROM settings and different keymaps depending on USB port connected, but default leader side remains left regardless.
 
 ## Building
 

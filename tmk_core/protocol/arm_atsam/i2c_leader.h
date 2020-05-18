@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _I2C_MASTER_H_
-#define _I2C_MASTER_H_
+#ifndef _I2C_LEADER_H_
+#define _I2C_LEADER_H_
 
 #ifndef MD_BOOTLOADER
 
@@ -101,4 +101,4 @@ void    i2c0_init(void);
 uint8_t i2c0_transmit(uint8_t address, uint8_t *data, uint16_t length, uint16_t timeout);
 void    i2c0_stop(void);
 
-#endif  // _I2C_MASTER_H_
+#endif  // _I2C_LEADER_H_

@@ -10,8 +10,8 @@
 
 /* Select hand configuration */
 
-#define MASTER_LEFT
-/* #define _MASTER_RIGHT */
+#define LEADER_LEFT
+/* #define _LEADER_RIGHT */
 /* #define EE_HANDS */
 
 #endif

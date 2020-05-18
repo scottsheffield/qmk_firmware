@@ -14,7 +14,7 @@ The real fun here is that the tap dances use a custom defined Tap Dance type:
 
 ```c 
 #define ACTION_TAP_DANCE_DIABLO(index, keycode) {  \
-    .fn = { NULL, (void *)diablo_tapdance_master, NULL }, \
+    .fn = { NULL, (void *)diablo_tapdance_leader, NULL }, \
     .user_data = (void *)&((diable_keys_t) { index, keycode }),  \
   }
 ```
@@ -74,13 +74,13 @@ The first one (`diablo_timer`) is what keeps track of the timer used for the key
 
 The second array is a list of predefined intervals, in seconds.  You can add more here, or remove entries.  It doesn't matter how long the array is, as this is computed automatically. 
 
-## The Magic - Part 1: Master function
+## The Magic - Part 1: Leader function
 
-The first part of the magic here is the `diablo_tapdance_master` function.  The Tap Dance feature calls this function, directly, and passes some data to the function.  Namely, it passes the array of the index and the keycode (`diablo_keys_t` from above).  This sets the keycode and the interval for the specific index of `diabolo_timer` based on the number of taps. If you hit it more than the number of items in the array, then it zeroes out the interval, disabling it.  
+The first part of the magic here is the `diablo_tapdance_leader` function.  The Tap Dance feature calls this function, directly, and passes some data to the function.  Namely, it passes the array of the index and the keycode (`diablo_keys_t` from above).  This sets the keycode and the interval for the specific index of `diabolo_timer` based on the number of taps. If you hit it more than the number of items in the array, then it zeroes out the interval, disabling it.  
 
 ```c
 // Cycle through the times for the macro, starting at 0, for disabled.
-void diablo_tapdance_master(qk_tap_dance_state_t *state, void *user_data) {
+void diablo_tapdance_leader(qk_tap_dance_state_t *state, void *user_data) {
     diable_keys_t *diablo_keys = (diable_keys_t *)user_data;
     // Sets the keycode based on the index
     diablo_timer[diablo_keys->index].keycode = diablo_keys->keycode;

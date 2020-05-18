@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "i2c_master.h"
+#include "i2c_leader.h"
 #include "oled_driver.h"
 #include OLED_FONT_H
 #include "timer.h"
@@ -124,7 +124,7 @@ uint32_t oled_scroll_timeout;
 
 #if defined(__AVR__)
 // identical to i2c_transmit, but for PROGMEM since all initialization is in PROGMEM arrays currently
-// probably should move this into i2c_master...
+// probably should move this into i2c_leader...
 static i2c_status_t i2c_transmit_P(uint8_t address, const uint8_t *data, uint16_t length, uint16_t timeout) {
     i2c_status_t status = i2c_start(address | I2C_WRITE, timeout);
 

@@ -17,7 +17,7 @@
 #pragma once
 
 #define USE_SERIAL
-#define MASTER_LEFT
+#define LEADER_LEFT
 
 #define TAPPING_TERM 200
 #define TAPPING_TOGGLE 2

@@ -21,51 +21,51 @@
 #include "matrix.h"
 #include "quantum.h"
 #include "board.h"
-#include "i2c_master.h"
+#include "i2c_leader.h"
 
 static board_info_t  boards[NUM_BOARDS] = BOARD_INFOS;
-static board_info_t* master_board       = NULL;
+static board_info_t* leader_board       = NULL;
 
-static bool          board_is_master(board_info_t* board);
+static bool          board_is_leader(board_info_t* board);
 static bool          board_is_initialized(board_info_t* board);
 static board_info_t* get_board_by_index(uint8_t board_index);
 static uint8_t       board_merge_led_config(board_info_t* board, uint8_t iodir);
 static uint8_t       board_merge_led_status(board_info_t* board, uint8_t data);
-static void          board_master_init(void);
-static void          board_slave_init(void);
+static void          board_leader_init(void);
+static void          board_follower_init(void);
 
 //
 // board interface
 //
-static void board_select_master_row(board_info_t* board, uint8_t row);
-static void board_unselect_master_row(board_info_t* board, uint8_t row);
-static void board_unselect_master_rows(board_info_t* board);
-static bool board_read_cols_on_master_row(board_info_t* board, matrix_row_t current_matrix[], uint8_t row);
-static void board_set_master_led(board_info_t* board, uint8_t led_index, bool status);
-static void board_select_slave_row(board_info_t* board, uint8_t row);
-static void board_unselect_slave_row(board_info_t* board, uint8_t row);
-static void board_unselect_slave_rows(board_info_t* board);
-static bool board_read_cols_on_slave_row(board_info_t* board, matrix_row_t current_matrix[], uint8_t row);
-static void board_set_slave_led(board_info_t* board, uint8_t led_index, bool status);
+static void board_select_leader_row(board_info_t* board, uint8_t row);
+static void board_unselect_leader_row(board_info_t* board, uint8_t row);
+static void board_unselect_leader_rows(board_info_t* board);
+static bool board_read_cols_on_leader_row(board_info_t* board, matrix_row_t current_matrix[], uint8_t row);
+static void board_set_leader_led(board_info_t* board, uint8_t led_index, bool status);
+static void board_select_follower_row(board_info_t* board, uint8_t row);
+static void board_unselect_follower_row(board_info_t* board, uint8_t row);
+static void board_unselect_follower_rows(board_info_t* board);
+static bool board_read_cols_on_follower_row(board_info_t* board, matrix_row_t current_matrix[], uint8_t row);
+static void board_set_follower_led(board_info_t* board, uint8_t led_index, bool status);
 
-static board_interface_t master_interface = {board_select_master_row, board_unselect_master_row, board_unselect_master_rows, board_read_cols_on_master_row, board_set_master_led};
-static board_interface_t slave_interface  = {board_select_slave_row, board_unselect_slave_row, board_unselect_slave_rows, board_read_cols_on_slave_row, board_set_slave_led};
+static board_interface_t leader_interface = {board_select_leader_row, board_unselect_leader_row, board_unselect_leader_rows, board_read_cols_on_leader_row, board_set_leader_led};
+static board_interface_t follower_interface  = {board_select_follower_row, board_unselect_follower_row, board_unselect_follower_rows, board_read_cols_on_follower_row, board_set_follower_led};
 
 static board_interface_t* get_interface(board_info_t* board) {
-    if (board_is_master(board)) {
-        return &master_interface;
+    if (board_is_leader(board)) {
+        return &leader_interface;
     }
-    return &slave_interface;
+    return &follower_interface;
 }
 
-static void board_set_master_led(board_info_t* board, uint8_t led_index, bool status) {
+static void board_set_leader_led(board_info_t* board, uint8_t led_index, bool status) {
     pin_t pin                    = board->led_pins[led_index];
     board->led_status[led_index] = status;
     setPinOutput(pin);
     status ? writePinHigh(pin) : writePinLow(pin);
 }
 
-static void board_set_slave_led(board_info_t* board, uint8_t led_index, bool status) {
+static void board_set_follower_led(board_info_t* board, uint8_t led_index, bool status) {
     board->led_status[led_index] = status;
     uint8_t iodir                = board_merge_led_config(board, 0xff);
     uint8_t data                 = board_merge_led_status(board, 0x00);
@@ -80,7 +80,7 @@ static uint8_t board_merge_led_config(board_info_t* board, uint8_t iodir) {
     return iodir;
 }
 
-static bool board_slave_config(board_info_t* board) {
+static bool board_follower_config(board_info_t* board) {
     uint8_t      set   = 0xff;
     uint8_t      clear = 0x00;
     i2c_status_t res   = 0;
@@ -115,28 +115,28 @@ static bool board_slave_config(board_info_t* board) {
     return true;
 }
 
-static void board_slave_init(void) {
+static void board_follower_init(void) {
     i2c_init();
     _delay_ms(500);
 
     for (uint8_t i = 0; i < NUM_BOARDS; i++) {
         board_info_t* board = &boards[i];
-        if (board_is_master(board)) {
+        if (board_is_leader(board)) {
             continue;
         }
         if (i2c_start(EXPANDER_ADDR(board->i2c_address), BOARD_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
             continue;
         }
         i2c_stop();
-        if (board_slave_config(board)) {
+        if (board_follower_config(board)) {
             board->initialized = true;
         }
     }
 }
 
-inline bool board_is_master(board_info_t* board) {
+inline bool board_is_leader(board_info_t* board) {
     if (board) {
-        return board->master;
+        return board->leader;
     }
     return false;
 }
@@ -145,12 +145,12 @@ inline uint8_t matrix2board(uint8_t row) { return row % NUM_ROWS; }
 
 inline uint8_t board_index(uint8_t row) { return row / NUM_ROWS; }
 
-static board_info_t* get_master_board(void) {
-    if (master_board == NULL) {
+static board_info_t* get_leader_board(void) {
+    if (leader_board == NULL) {
         for (uint8_t i = 0; i < NUM_BOARDS; i++) {
-            if (boards[i].master) {
-                master_board = &boards[i];
-                return master_board;
+            if (boards[i].leader) {
+                leader_board = &boards[i];
+                return leader_board;
             }
         }
     }
@@ -196,9 +196,9 @@ static uint8_t board_merge_led_status(board_info_t* board, uint8_t data) {
 }
 
 //
-// Functions for slave
+// Functions for follower
 //
-static uint8_t board_read_slave_cols(board_info_t* board) {
+static uint8_t board_read_follower_cols(board_info_t* board) {
     if (!board_is_initialized(board)) {
         return 0xff;
     }
@@ -207,7 +207,7 @@ static uint8_t board_read_slave_cols(board_info_t* board) {
     return (res < 0) ? 0xff : data;
 }
 
-static void board_select_slave_row(board_info_t* board, uint8_t board_row) {
+static void board_select_follower_row(board_info_t* board, uint8_t board_row) {
     if (!board_is_initialized(board)) {
         return;
     }
@@ -218,7 +218,7 @@ static void board_select_slave_row(board_info_t* board, uint8_t board_row) {
     i2c_writeReg(EXPANDER_ADDR(board->i2c_address), EXPANDER_OLATB, (const uint8_t*)&status, sizeof(status), BOARD_I2C_TIMEOUT);
 }
 
-static void board_unselect_slave_rows(board_info_t* board) {
+static void board_unselect_follower_rows(board_info_t* board) {
     if (!board_is_initialized(board)) {
         return;
     }
@@ -228,41 +228,41 @@ static void board_unselect_slave_rows(board_info_t* board) {
     i2c_writeReg(EXPANDER_ADDR(board->i2c_address), EXPANDER_OLATB, (const uint8_t*)&data, sizeof(data), BOARD_I2C_TIMEOUT);
 }
 
-static void board_unselect_slave_row(board_info_t* board, uint8_t board_row) { board_unselect_slave_rows(board); }
+static void board_unselect_follower_row(board_info_t* board, uint8_t board_row) { board_unselect_follower_rows(board); }
 
 /*
  * row : matrix row (not board row)
  */
-static bool board_read_cols_on_slave_row(board_info_t* board, matrix_row_t current_matrix[], uint8_t row) {
+static bool board_read_cols_on_follower_row(board_info_t* board, matrix_row_t current_matrix[], uint8_t row) {
     matrix_row_t last_row_value = current_matrix[row];
     current_matrix[row]         = 0;
 
     uint8_t board_row = matrix2board(row);
-    board_select_slave_row(board, board_row);
+    board_select_follower_row(board, board_row);
     wait_us(30);
 
-    uint8_t cols = board_read_slave_cols(board);
+    uint8_t cols = board_read_follower_cols(board);
     for (uint8_t col_index = 0; col_index < MATRIX_COLS; col_index++) {
         uint8_t pin       = board->col_pins[col_index];
         uint8_t pin_state = cols & PIN2BIT(pin);
         current_matrix[row] |= pin_state ? 0 : (1 << col_index);
     }
-    board_unselect_slave_row(board, board_row);
+    board_unselect_follower_row(board, board_row);
 
     return (last_row_value != current_matrix[row]);
 }
 
 //
-// Functions for master board
+// Functions for leader board
 //
-static void board_select_master_row(board_info_t* board, uint8_t board_row) {
+static void board_select_leader_row(board_info_t* board, uint8_t board_row) {
     setPinOutput(board->row_pins[board_row]);
     writePinLow(board->row_pins[board_row]);
 }
 
-static void board_unselect_master_row(board_info_t* board, uint8_t board_row) { setPinInputHigh(board->row_pins[board_row]); }
+static void board_unselect_leader_row(board_info_t* board, uint8_t board_row) { setPinInputHigh(board->row_pins[board_row]); }
 
-static void board_unselect_master_rows(board_info_t* board) {
+static void board_unselect_leader_rows(board_info_t* board) {
     if (!board) {
         return;
     }
@@ -274,25 +274,25 @@ static void board_unselect_master_rows(board_info_t* board) {
 /*
  * row : matrix row (not board row)
  */
-static bool board_read_cols_on_master_row(board_info_t* board, matrix_row_t current_matrix[], uint8_t row) {
+static bool board_read_cols_on_leader_row(board_info_t* board, matrix_row_t current_matrix[], uint8_t row) {
     matrix_row_t last_row_value = current_matrix[row];
     current_matrix[row]         = 0;
 
     uint8_t board_row = matrix2board(row);
-    board_select_master_row(board, board_row);
+    board_select_leader_row(board, board_row);
     wait_us(30);
 
     for (uint8_t col_index = 0; col_index < MATRIX_COLS; col_index++) {
         uint8_t pin_state = readPin(board->col_pins[col_index]);
         current_matrix[row] |= pin_state ? 0 : (1 << col_index);
     }
-    board_unselect_master_row(board, board_row);
+    board_unselect_leader_row(board, board_row);
 
     return (last_row_value != current_matrix[row]);
 }
 
-static void board_master_init(void) {
-    board_info_t* board = get_master_board();
+static void board_leader_init(void) {
+    board_info_t* board = get_leader_board();
     if (!board) {
         return;
     }
@@ -358,7 +358,7 @@ void board_unselect_rows(void) {
 
 void board_init(void) {
     board_setup();
-    board_master_init();
-    board_slave_init();
+    board_leader_init();
+    board_follower_init();
     board_unselect_rows();
 }

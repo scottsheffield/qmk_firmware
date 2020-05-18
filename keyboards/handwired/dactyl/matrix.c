@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "util.h"
 #include "matrix.h"
 #include "dactyl.h"
-#include "i2cmaster.h"
+#include "i2cleader.h"
 #include "timer.h"
 
 

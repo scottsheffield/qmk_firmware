@@ -51,7 +51,7 @@ __attribute__((weak)) bool is_keyboard_left(void) {
     return readPin(SPLIT_HAND_PIN);
 #elif defined(EE_HANDS)
     return eeconfig_read_handedness();
-#elif defined(MASTER_RIGHT)
+#elif defined(LEADER_RIGHT)
     return !has_usb();
 #endif
 
@@ -59,40 +59,40 @@ __attribute__((weak)) bool is_keyboard_left(void) {
 }
 
 __attribute__((weak)) bool has_usb(void) {
-    static enum { UNKNOWN, MASTER, SLAVE } usbstate = UNKNOWN;
+    static enum { UNKNOWN, LEADER, FOLLOWER } usbstate = UNKNOWN;
 
     // only check once, as this is called often
     if (usbstate == UNKNOWN) {
 #if defined(SPLIT_USB_DETECT)
-        usbstate = waitForUsb() ? MASTER : SLAVE;
+        usbstate = waitForUsb() ? LEADER : FOLLOWER;
 #elif defined(__AVR__)
         USBCON |= (1 << OTGPADE);  // enables VBUS pad
         wait_us(5);
 
-        usbstate = (USBSTA & (1 << VBUS)) ? MASTER : SLAVE;  // checks state of VBUS
+        usbstate = (USBSTA & (1 << VBUS)) ? LEADER : FOLLOWER;  // checks state of VBUS
 #else
-        usbstate = MASTER;
+        usbstate = LEADER;
 #endif
     }
 
-    return (usbstate == MASTER);
+    return (usbstate == LEADER);
 }
 
-static void keyboard_master_setup(void) {
+static void keyboard_leader_setup(void) {
 
 #ifdef USE_MATRIX_I2C
-    i2c_master_init();
+    i2c_leader_init();
 #else
-    serial_master_init();
+    serial_leader_init();
 #endif
 }
 
-static void keyboard_slave_setup(void) {
+static void keyboard_follower_setup(void) {
 
 #ifdef USE_MATRIX_I2C
-    i2c_slave_init(SLAVE_I2C_ADDRESS);
+    i2c_follower_init(FOLLOWER_I2C_ADDRESS);
 #else
-    serial_slave_init();
+    serial_follower_init();
 #endif
 }
 
@@ -101,9 +101,9 @@ void split_keyboard_setup(void) {
     isLeftHand = is_keyboard_left();
 
    if (has_usb()) {
-      keyboard_master_setup();
+      keyboard_leader_setup();
    } else {
-      keyboard_slave_setup();
+      keyboard_follower_setup();
    }
    sei();
 }

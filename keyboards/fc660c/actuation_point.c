@@ -31,28 +31,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 uint8_t read_rdac(void) {
     // read RDAC register
     i2c_start_write(AD5258_ADDR);
-    i2c_master_write(AD5258_INST_RDAC);
+    i2c_leader_write(AD5258_INST_RDAC);
     i2c_start_read(AD5258_ADDR);
-    uint8_t ret = i2c_master_read(I2C_NACK);
-    i2c_master_stop();
+    uint8_t ret = i2c_leader_read(I2C_NACK);
+    i2c_leader_stop();
     return ret;
 };
 
 uint8_t read_eeprom(void) {
     i2c_start_write(AD5258_ADDR);
-    i2c_master_write(AD5258_INST_EEPROM);
+    i2c_leader_write(AD5258_INST_EEPROM);
     i2c_start_read(AD5258_ADDR);
-    uint8_t ret = i2c_master_read(I2C_NACK);
-    i2c_master_stop();
+    uint8_t ret = i2c_leader_read(I2C_NACK);
+    i2c_leader_stop();
     return ret;
 };
 
 void write_rdac(uint8_t rdac) {
     // write RDAC register:
     i2c_start_write(AD5258_ADDR);
-    i2c_master_write(AD5258_INST_RDAC);
-    i2c_master_write(rdac & 0x3F);
-    i2c_master_stop();
+    i2c_leader_write(AD5258_INST_RDAC);
+    i2c_leader_write(rdac & 0x3F);
+    i2c_leader_stop();
 };
 
 void actuation_point_up(void) {
@@ -74,7 +74,7 @@ void actuation_point_down(void) {
 };
 
 void adjust_actuation_point(int offset) {
-    i2c_master_init();
+    i2c_leader_init();
     uint8_t rdac = read_eeprom() + offset;
     if (rdac > 63) { // protects from under and overflows
         if (offset > 0)

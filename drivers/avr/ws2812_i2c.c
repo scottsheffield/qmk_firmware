@@ -1,5 +1,5 @@
 #include "ws2812.h"
-#include "i2c_master.h"
+#include "i2c_leader.h"
 
 #ifdef RGBW
 #    error "RGBW not supported"

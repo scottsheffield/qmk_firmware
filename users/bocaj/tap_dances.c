@@ -11,7 +11,7 @@ bool check_dtimer(uint8_t dtimer) { return (timer_elapsed(diablo_timer[dtimer]) 
 
 // Cycle through the times for the macro, starting at 0, for disabled.
 // Max of six values, so don't exceed
-void diablo_tapdance_master(qk_tap_dance_state_t *state, void *user_data, uint8_t diablo_key) {
+void diablo_tapdance_leader(qk_tap_dance_state_t *state, void *user_data, uint8_t diablo_key) {
   if (state->count >= 7) {
     diablo_key_time[diablo_key] = diablo_times[0];
     reset_tap_dance(state);
@@ -21,10 +21,10 @@ void diablo_tapdance_master(qk_tap_dance_state_t *state, void *user_data, uint8_
 }
 
 // Would rather have one function for all of this, but no idea how to do that...
-void diablo_tapdance1(qk_tap_dance_state_t *state, void *user_data) { diablo_tapdance_master(state, user_data, 0); }
-void diablo_tapdance2(qk_tap_dance_state_t *state, void *user_data) { diablo_tapdance_master(state, user_data, 1); }
-void diablo_tapdance3(qk_tap_dance_state_t *state, void *user_data) { diablo_tapdance_master(state, user_data, 2); }
-void diablo_tapdance4(qk_tap_dance_state_t *state, void *user_data) { diablo_tapdance_master(state, user_data, 3); }
+void diablo_tapdance1(qk_tap_dance_state_t *state, void *user_data) { diablo_tapdance_leader(state, user_data, 0); }
+void diablo_tapdance2(qk_tap_dance_state_t *state, void *user_data) { diablo_tapdance_leader(state, user_data, 1); }
+void diablo_tapdance3(qk_tap_dance_state_t *state, void *user_data) { diablo_tapdance_leader(state, user_data, 2); }
+void diablo_tapdance4(qk_tap_dance_state_t *state, void *user_data) { diablo_tapdance_leader(state, user_data, 3); }
 
 //Tap Dance Definitions
 qk_tap_dance_action_t tap_dance_actions[] = {

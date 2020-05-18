@@ -3,7 +3,7 @@
 #define USE_I2C
 
 /* Select hand configuration */
-//#define MASTER_RIGHT
+//#define LEADER_RIGHT
 
 #define TAPPING_TERM 150
 

@@ -189,7 +189,7 @@ bool led_backlight_keyframe_half_period_sweep_to_off(keyframe_animation_t* anima
 +---+---+---+---+---+---+---+---+---+---+---+---+---+---+-------+
 */
 
-#ifdef MASTER_IS_ON_RIGHT /*right side*/
+#ifdef LEADER_IS_ON_RIGHT /*right side*/
 keyframe_animation_t sweep_on_sweep_off_left_and_right = {
     .num_frames = 12,
     .loop = true,

@@ -2,7 +2,7 @@
 
 #pragma once
 #define USE_SERIAL
-#define MASTER_LEFT
+#define LEADER_LEFT
 
 #undef UNICODE_SELECTED_MODES
 #define UNICODE_SELECTED_MODES UC_OSX, UC_LNX, UC_WINC

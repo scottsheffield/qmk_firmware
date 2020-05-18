@@ -20,4 +20,4 @@
 // #define USE_SERIAL
 // #define USE_I2C
 
-// #define MASTER_RIGHT
+// #define LEADER_RIGHT

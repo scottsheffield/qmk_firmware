@@ -435,7 +435,7 @@ void matrix_init_user(void) {
 
 //SSD1306 OLED init and update loop, make sure to add #define SSD1306OLED in config.h
 #ifdef SSD1306OLED
-void matrix_master_OLED_init (void) {
+void matrix_leader_OLED_init (void) {
     TWI_Init(TWI_BIT_PRESCALE_1, TWI_BITLENGTH_FROM_FREQ(1, 800000));
     iota_gfx_init(0);   // turns on the display
 }

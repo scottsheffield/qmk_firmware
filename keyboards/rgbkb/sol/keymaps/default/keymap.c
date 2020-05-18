@@ -224,7 +224,7 @@ const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS * 2][2]  = {
 };
 
 void encoder_update_user(uint8_t index, bool clockwise) {
-  if (!is_keyboard_master())
+  if (!is_keyboard_leader())
     return;
 
 #ifdef RGB_OLED_MENU
@@ -299,7 +299,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // OLED Driver Logic
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (is_keyboard_master())
+  if (is_keyboard_leader())
     return OLED_ROTATION_270;
   return OLED_ROTATION_180;
 }
@@ -360,7 +360,7 @@ static void render_status(void) {
 }
 
 void oled_task_user(void) {
-  if (is_keyboard_master()) {
+  if (is_keyboard_leader()) {
     render_status();
   } else {
     render_logo();

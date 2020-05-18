@@ -14,13 +14,13 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /* Library made by: g4lvanix
- * Github repository: https://github.com/g4lvanix/I2C-master-lib
+ * Github repository: https://github.com/g4lvanix/I2C-leader-lib
  */
 
 #include <avr/io.h>
 #include <util/twi.h>
 
-#include "i2c_master.h"
+#include "i2c_leader.h"
 #include "timer.h"
 #include "wait.h"
 
@@ -41,7 +41,7 @@ void i2c_init(void) {
     // enable TWI (two-wire interface)
     TWCR |= (1 << TWEN);
 
-    // enable TWI interrupt and slave address ACK
+    // enable TWI interrupt and follower address ACK
     TWCR |= (1 << TWIE);
     TWCR |= (1 << TWEA);
 #endif
@@ -65,7 +65,7 @@ i2c_status_t i2c_start(uint8_t address, uint16_t timeout) {
         return I2C_STATUS_ERROR;
     }
 
-    // load slave address into data register
+    // load follower address into data register
     TWDR = address;
     // start transmission of address
     TWCR = (1 << TWINT) | (1 << TWEN);

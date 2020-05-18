@@ -1,6 +1,6 @@
 #include <stdbool.h>
 #include "action.h"
-#include "i2cmaster.h"
+#include "i2cleader.h"
 #include "expander.h"
 #include "debug.h"
 

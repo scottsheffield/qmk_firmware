@@ -6,7 +6,7 @@
 #define TAPPING_FORCE_HOLD
 
 // where is the cord plugged in?
-#define MASTER_RIGHT
+#define LEADER_RIGHT
 
 /* speed up mousekeys a bit */
 #define MOUSEKEY_DELAY             50

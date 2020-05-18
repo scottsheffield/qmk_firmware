@@ -80,7 +80,7 @@ void leds_init(void){
     txbuf[DATA_SIZE+i] = 0x00;
   spiAcquireBus(&LEDS_SPI);              /* Acquire ownership of the bus.    */
   spiStart(&LEDS_SPI, &spicfg);          /* Setup transfer parameters.       */
-  spiSelect(&LEDS_SPI);                  /* Slave Select assertion.          */
+  spiSelect(&LEDS_SPI);                  /* Follower Select assertion.          */
   chThdCreateStatic(LEDS_THREAD_WA, sizeof(LEDS_THREAD_WA),NORMALPRIO, ledsThread, NULL);
 #if LED_SPIRAL
   chThdCreateStatic(HSVTRANS_WA, sizeof(HSVTRANS_WA),

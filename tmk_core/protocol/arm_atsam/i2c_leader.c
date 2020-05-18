@@ -53,7 +53,7 @@ void i2c0_init(void) {
     // I2C
     // Note: SW Reset handled in CLK_set_i2c0_freq clks.c
 
-    SERCOM0->I2CM.CTRLA.bit.MODE = 5;  // Set master mode
+    SERCOM0->I2CM.CTRLA.bit.MODE = 5;  // Set leader mode
 
     SERCOM0->I2CM.CTRLA.bit.SPEED    = 0;  // Set to 1 for Fast-mode Plus (FM+) up to 1 MHz
     SERCOM0->I2CM.CTRLA.bit.RUNSTDBY = 1;  // Enabled
@@ -136,7 +136,7 @@ void i2c1_init(void) {
     /* I2C */
     // Note: SW Reset handled in CLK_set_i2c1_freq clks.c
 
-    SERCOM1->I2CM.CTRLA.bit.MODE     = 5;  // MODE: Set master mode (No sync)
+    SERCOM1->I2CM.CTRLA.bit.MODE     = 5;  // MODE: Set leader mode (No sync)
     SERCOM1->I2CM.CTRLA.bit.SPEED    = 1;  // SPEED: Fm+ up to 1MHz (No sync)
     SERCOM1->I2CM.CTRLA.bit.RUNSTDBY = 1;  // RUNSTBY: Enabled (No sync)
 
@@ -294,12 +294,12 @@ uint8_t I2C3733_Init_Drivers(void) {
     if (gcr_actual > LED_GCR_MAX) gcr_actual = LED_GCR_MAX;
     gcr_desired = gcr_actual;
 
-    // Set up master device
+    // Set up leader device
     i2c_led_send_CRWL(0);
     i2c_led_select_page(0, 3);
     i2c_led_send_mode_op_gcr(0, 0, ISSI3733_CR_SSD_NORMAL);  // No SYNC due to brightness mismatch with second driver
 
-    // Set up slave device
+    // Set up follower device
     i2c_led_send_CRWL(1);
     i2c_led_select_page(1, 3);
     i2c_led_send_mode_op_gcr(1, 0, ISSI3733_CR_SSD_NORMAL);  // No SYNC due to brightness mismatch with first driver and slight flicker at rgb values 1,2

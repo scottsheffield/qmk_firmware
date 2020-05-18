@@ -20,7 +20,7 @@ COMMAND_ENABLE		= yes
 # know what you're doing.
 #
 # No touchy, capiche?
-SRC += matrix.c i2c_master.c
+SRC += matrix.c i2c_leader.c
 ifeq ($(strip $(DEBUG_MATRIX)), yes)
     OPT_DEFS += -DDEBUG_MATRIX
 endif

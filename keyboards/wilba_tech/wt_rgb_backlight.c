@@ -45,11 +45,11 @@
 
 #if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65)
 #include <avr/interrupt.h>
-#include "drivers/avr/i2c_master.h"
+#include "drivers/avr/i2c_leader.h"
 #else
 #include "ch.h"
 #include "hal.h"
-#include "drivers/arm/i2c_master.h"
+#include "drivers/arm/i2c_leader.h"
 #endif
 
 #if defined(RGB_BACKLIGHT_DAWN60)

@@ -74,7 +74,7 @@ public:
                 SPI_MOSI::SetDirWrite();
                 SPI_MISO::SetDirRead();
                 SPI_SS::SetDirWrite();
-                /* mode 00 (CPOL=0, CPHA=0) master, fclk/2. Mode 11 (CPOL=11, CPHA=11) is also supported by MAX3421E */
+                /* mode 00 (CPOL=0, CPHA=0) leader, fclk/2. Mode 11 (CPOL=11, CPHA=11) is also supported by MAX3421E */
                 SPCR = 0x50;
                 SPSR = 0x01; // 0x01
                 /**/

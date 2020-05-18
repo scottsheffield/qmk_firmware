@@ -44,8 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //#define EE_HANDS
 
-#define MASTER_LEFT
-//#define MASTER_RIGHT
+#define LEADER_LEFT
+//#define LEADER_RIGHT
 
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST

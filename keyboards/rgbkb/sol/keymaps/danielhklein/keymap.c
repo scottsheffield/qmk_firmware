@@ -324,7 +324,7 @@ static void render_status(void) {
 }
 
 void oled_task_user(void) {
-  if (is_keyboard_master())
+  if (is_keyboard_leader())
     render_status();
   else
     render_logo();

@@ -36,12 +36,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Soft Serial defines */
 #define SOFT_SERIAL_PIN D2
-#define SERIAL_SLAVE_BUFFER_LENGTH  ((MATRIX_ROWS)/2)
-#define SERIAL_MASTER_BUFFER_LENGTH ((MATRIX_ROWS)/2)
+#define SERIAL_FOLLOWER_BUFFER_LENGTH  ((MATRIX_ROWS)/2)
+#define SERIAL_LEADER_BUFFER_LENGTH ((MATRIX_ROWS)/2)
 
 /* Select hand configuration */
-#define MASTER_LEFT
-// #define MASTER_RIGHT
+#define LEADER_LEFT
+// #define LEADER_RIGHT
 // #define EE_HANDS
 
 // Helix keyboard OLED support

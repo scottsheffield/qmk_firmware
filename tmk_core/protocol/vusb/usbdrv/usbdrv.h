@@ -22,7 +22,7 @@ possible to trigger the interrupt from D-. If D- is used, interrupts are also
 triggered by SOF packets. D- requires a pull-up of 1.5k to +3.5V (and the
 device must be powered at 3.5V) to identify as low-speed USB device. A
 pull-down or pull-up of 1M SHOULD be connected from D+ to +3.5V to prevent
-interference when no USB master is connected. If you use Zener diodes to limit
+interference when no USB leader is connected. If you use Zener diodes to limit
 the voltage on D+ and D-, you MUST use a pull-down resistor, not a pull-up.
 We use D+ as interrupt source and not D- because it does not trigger on
 keep-alive and RESET states. If you want to count keep-alive events with
@@ -95,8 +95,8 @@ SE0 states can be detected by using D- as the interrupt source. Define
 USB_COUNT_SOF to 1 and use the global variable usbSofCount to check for bus
 activity.
 
-Operation without an USB master:
-The driver behaves neutral without connection to an USB master if D- reads
+Operation without an USB leader:
+The driver behaves neutral without connection to an USB leader if D- reads
 as 1. To avoid spurious interrupts, we recommend a high impedance (e.g. 1M)
 pull-down or pull-up resistor on D+ (interrupt). If Zener diodes are used,
 use a pull-down. If D- becomes statically 0, the driver may block in the

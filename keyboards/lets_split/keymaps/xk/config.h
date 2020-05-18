@@ -32,8 +32,8 @@ the Free Software Foundation, either version 2 of the License, or
 #define MOUSEKEY_WHEEL_MAX_SPEED   8
 #define MOUSEKEY_WHEEL_TIME_TO_MAX 40
 
-// #define MASTER_LEFT
-// #define MASTER_RIGHT
+// #define LEADER_LEFT
+// #define LEADER_RIGHT
 #define EE_HANDS
 
 

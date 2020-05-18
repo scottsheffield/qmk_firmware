@@ -32,4 +32,4 @@ FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 HD44780_ENABLE = no         # Enable support for HD44780 based LCDs
 CUSTOM_MATRIX = yes         # Use custom matrix
 SRC += matrix.c \
-       i2c_master.c
+       i2c_leader.c

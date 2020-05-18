@@ -207,11 +207,11 @@ void keyboard_setup(void) {
     keyboard_pre_init_kb();
 }
 
-/** \brief is_keyboard_master
+/** \brief is_keyboard_leader
  *
  * FIXME: needs doc
  */
-__attribute__((weak)) bool is_keyboard_master(void) { return true; }
+__attribute__((weak)) bool is_keyboard_leader(void) { return true; }
 
 /** \brief keyboard_init
  *
@@ -292,7 +292,7 @@ void keyboard_task(void) {
     matrix_scan();
 #endif
 
-    if (is_keyboard_master()) {
+    if (is_keyboard_leader()) {
         for (uint8_t r = 0; r < MATRIX_ROWS; r++) {
             matrix_row    = matrix_get_row(r);
             matrix_change = matrix_row ^ matrix_prev[r];

@@ -11,7 +11,7 @@ extern rgblight_config_t rgblight_config;
 static uint32_t oled_timer = 0;
 #endif
 
-extern uint8_t is_master;
+extern uint8_t is_leader;
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
@@ -307,7 +307,7 @@ void oled_task_user(void) {
     else { oled_on(); }
 #endif
 
-    if (is_master) {
+    if (is_leader) {
         render_status_main();  // Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
         render_status_secondary();

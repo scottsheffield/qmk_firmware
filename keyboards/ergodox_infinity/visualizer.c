@@ -127,7 +127,7 @@ static inline bool is_led_on(visualizer_user_data_t* user_data, uint8_t num) {
     return user_data->led_on & (1u << num);
 }
 
-static uint8_t get_led_index_master(visualizer_user_data_t* user_data) {
+static uint8_t get_led_index_leader(visualizer_user_data_t* user_data) {
     for (int i=0; i < 3; i++) {
         if (is_led_on(user_data, i)) {
             return i + 1;
@@ -136,10 +136,10 @@ static uint8_t get_led_index_master(visualizer_user_data_t* user_data) {
     return 0;
 }
 
-static uint8_t get_led_index_slave(visualizer_user_data_t* user_data) {
-    uint8_t master_index = get_led_index_master(user_data);
-    if (master_index!=0) {
-        for (int i=master_index; i < 3; i++) {
+static uint8_t get_led_index_follower(visualizer_user_data_t* user_data) {
+    uint8_t leader_index = get_led_index_leader(user_data);
+    if (leader_index!=0) {
+        for (int i=leader_index; i < 3; i++) {
             if (is_led_on(user_data, i)) {
                 return i + 1;
             }
@@ -177,13 +177,13 @@ static void update_emulated_leds(visualizer_state_t* state, visualizer_keyboard_
     uint8_t new_index;
     uint8_t old_index;
 
-    if (is_serial_link_master()) {
-        new_index = get_led_index_master(user_data_new);
-        old_index = get_led_index_master(user_data_old);
+    if (is_serial_link_leader()) {
+        new_index = get_led_index_leader(user_data_new);
+        old_index = get_led_index_leader(user_data_old);
     }
     else {
-        new_index = get_led_index_slave(user_data_new);
-        old_index = get_led_index_slave(user_data_old);
+        new_index = get_led_index_follower(user_data_new);
+        old_index = get_led_index_follower(user_data_old);
     }
     uint8_t new_secondary_index = get_secondary_led_index(user_data_new);
     uint8_t old_secondary_index = get_secondary_led_index(user_data_old);
@@ -252,7 +252,7 @@ void update_user_visualizer_state(visualizer_state_t* state, visualizer_keyboard
     // This function is called every time the status changes
 
     // NOTE that this is called from the visualizer thread, so don't access anything else outside the status
-    // This is also important because the slave won't have access to the active layer for example outside the
+    // This is also important because the follower won't have access to the active layer for example outside the
     // status.
 
     update_emulated_leds(state, prev_status);

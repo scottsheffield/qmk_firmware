@@ -17,8 +17,8 @@
 //
 // //// USE Simple API (OLD API, compatible with let's split serial.c)
 // ex.
-//  #define SERIAL_SLAVE_BUFFER_LENGTH MATRIX_ROWS/2
-//  #define SERIAL_MASTER_BUFFER_LENGTH 1
+//  #define SERIAL_FOLLOWER_BUFFER_LENGTH MATRIX_ROWS/2
+//  #define SERIAL_LEADER_BUFFER_LENGTH 1
 //
 // //// USE flexible API (using multi-type transaction function)
 //  #define SERIAL_USE_MULTI_TRANSACTION
@@ -28,15 +28,15 @@
 
 #ifndef SERIAL_USE_MULTI_TRANSACTION
 /* --- USE Simple API (OLD API, compatible with let's split serial.c) */
-#if SERIAL_SLAVE_BUFFER_LENGTH > 0
-extern volatile uint8_t serial_slave_buffer[SERIAL_SLAVE_BUFFER_LENGTH];
+#if SERIAL_FOLLOWER_BUFFER_LENGTH > 0
+extern volatile uint8_t serial_follower_buffer[SERIAL_FOLLOWER_BUFFER_LENGTH];
 #endif
-#if SERIAL_MASTER_BUFFER_LENGTH > 0
-extern volatile uint8_t serial_master_buffer[SERIAL_MASTER_BUFFER_LENGTH];
+#if SERIAL_LEADER_BUFFER_LENGTH > 0
+extern volatile uint8_t serial_leader_buffer[SERIAL_LEADER_BUFFER_LENGTH];
 #endif
 
-void serial_master_init(void);
-void serial_slave_init(void);
+void serial_leader_init(void);
+void serial_follower_init(void);
 int serial_update_buffers(void);
 
 #endif // USE Simple API

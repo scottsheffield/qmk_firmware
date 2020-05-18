@@ -990,7 +990,7 @@ void BTD::hci_accept_connection() {
         hcibuf[6] = disc_bdaddr[3];
         hcibuf[7] = disc_bdaddr[4];
         hcibuf[8] = disc_bdaddr[5];
-        hcibuf[9] = 0x00; // Switch role to master
+        hcibuf[9] = 0x00; // Switch role to leader
 
         HCI_Command(hcibuf, 10);
 }

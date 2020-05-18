@@ -1,6 +1,6 @@
 #include QMK_KEYBOARD_H
 
-extern uint8_t is_master;
+extern uint8_t is_leader;
 
 enum layer_names {
   _COLEMAKDHM,
@@ -145,7 +145,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (is_master) {
+  if (is_leader) {
     return OLED_ROTATION_270;
   } else {
     return OLED_ROTATION_180;
@@ -216,7 +216,7 @@ void render_status(void) {
 }
 
 void oled_task_user(void) {
-  if (is_master) {
+  if (is_leader) {
     render_status();     // Renders the current keyboard state (layer, lock, caps, scroll, etc)
   } else {
     render_crkbd_logo();

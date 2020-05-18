@@ -21,8 +21,8 @@ static void setup_handedness(void) {
   #ifdef EE_HANDS
     isLeftHand = eeprom_read_byte(EECONFIG_HANDEDNESS);
   #else
-    // I2C_MASTER_RIGHT is deprecated, use MASTER_RIGHT instead, since this works for both serial and i2c
-    #if defined(I2C_MASTER_RIGHT) || defined(MASTER_RIGHT)
+    // I2C_LEADER_RIGHT is deprecated, use LEADER_RIGHT instead, since this works for both serial and i2c
+    #if defined(I2C_LEADER_RIGHT) || defined(LEADER_RIGHT)
       isLeftHand = !has_usb();
     #else
       isLeftHand = has_usb();
@@ -30,24 +30,24 @@ static void setup_handedness(void) {
   #endif
 }
 
-static void keyboard_master_setup(void) {
+static void keyboard_leader_setup(void) {
 #ifdef USE_I2C
 #ifdef SSD1306OLED
-    matrix_master_OLED_init ();
+    matrix_leader_OLED_init ();
 #endif
 #endif
 #ifdef USE_MATRIX_I2C
-    i2c_master_init();
+    i2c_leader_init();
 #else
-    serial_master_init();
+    serial_leader_init();
 #endif
 }
 
-static void keyboard_slave_setup(void) {
+static void keyboard_follower_setup(void) {
 #ifdef USE_MATRIX_I2C
-    i2c_slave_init(SLAVE_I2C_ADDRESS);
+    i2c_follower_init(FOLLOWER_I2C_ADDRESS);
 #else
-    serial_slave_init();
+    serial_follower_init();
 #endif
 }
 
@@ -61,18 +61,18 @@ void split_keyboard_setup(void) {
    setup_handedness();
 
    if (has_usb()) {
-      keyboard_master_setup();
+      keyboard_leader_setup();
    } else {
-      keyboard_slave_setup();
+      keyboard_follower_setup();
    }
    sei();
 }
 
-void keyboard_slave_loop(void) {
+void keyboard_follower_loop(void) {
    matrix_init();
 
    while (1) {
-      matrix_slave_scan();
+      matrix_follower_scan();
    }
 }
 
@@ -81,6 +81,6 @@ void matrix_setup(void) {
     split_keyboard_setup();
 
     if (!has_usb()) {
-        keyboard_slave_loop();
+        keyboard_follower_loop();
     }
 }

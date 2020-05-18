@@ -145,9 +145,9 @@
 KEYMAP_ROW_LEFT_ ## _LEFT_TYPE(   k001, k002, k003, k004, k005, k006, k007, k008, k009, k00A, k00B, k00C ), \
 KEYMAP_ROW_RIGHT_ ## _RIGHT_TYPE( k011, k012, k013, k014, k015, k016, k017, k018, k019, k01A, k01B, k01C )
 
-// Changable Master Macro
+// Changable Leader Macro
 
-#define KEYMAP_MASTER(_MATRIX_LAYER, _LEFT_TYPE, _RIGHT_TYPE, \
+#define KEYMAP_LEADER(_MATRIX_LAYER, _LEFT_TYPE, _RIGHT_TYPE, \
                                             k001, k002, k003, k004,       k005, k006, k007, k008, k009, k00A, k00B, k00C,       k011, k012, k013, k014, k015, k016, k017, k018,       k019, k01A, k01B, k01C, \
                                             k101, k102, k103, k104,       k105, k106, k107, k108, k109, k10A, k10B, k10C,       k111, k112, k113, k114, k115, k116, k117, k118,       k119, k11A, k11B, k11C, \
                                             k201, k202, k203, k204,       k205, k206, k207, k208, k209, k20A, k20B, k20C,       k211, k212, k213, k214, k215, k216, k217, k218,       k219, k21A, k21B, k21C, \

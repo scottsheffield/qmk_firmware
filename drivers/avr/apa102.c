@@ -55,7 +55,7 @@ void apa102_send_frame(uint32_t frame) {
 void apa102_start_frame() { apa102_send_frame(0); }
 
 void apa102_end_frame(uint16_t leds) {
-    // This function has been taken from: https://github.com/pololu/apa102-arduino/blob/master/APA102.h
+    // This function has been taken from: https://github.com/pololu/apa102-arduino/blob/leader/APA102.h
     // and adapted. The code is MIT licensed. I think thats compatible?
 
     // We need to send some more bytes to ensure that all the LEDs in the

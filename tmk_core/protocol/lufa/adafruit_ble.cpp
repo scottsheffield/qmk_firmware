@@ -112,8 +112,8 @@ enum sdep_type {
     SdepResponse      = 0x20,
     SdepAlert         = 0x40,
     SdepError         = 0x80,
-    SdepSlaveNotReady = 0xfe,  // Try again later
-    SdepSlaveOverflow = 0xff,  // You read more data than is available
+    SdepFollowerNotReady = 0xfe,  // Try again later
+    SdepFollowerOverflow = 0xff,  // You read more data than is available
 };
 
 enum ble_cmd {
@@ -234,7 +234,7 @@ static bool sdep_send_pkt(const struct sdep_msg *msg, uint16_t timeout) {
     bool     ready      = false;
 
     do {
-        ready = SPI_TransferByte(msg->type) != SdepSlaveNotReady;
+        ready = SPI_TransferByte(msg->type) != SdepFollowerNotReady;
         if (ready) {
             break;
         }
@@ -246,7 +246,7 @@ static bool sdep_send_pkt(const struct sdep_msg *msg, uint16_t timeout) {
     } while (timer_elapsed(timerStart) < timeout);
 
     if (ready) {
-        // Slave is ready; send the rest of the packet
+        // Follower is ready; send the rest of the packet
         spi_send_bytes(&msg->cmd_low, sizeof(*msg) - (1 + sizeof(msg->payload)) + msg->len);
         success = true;
     }
@@ -290,7 +290,7 @@ static bool sdep_recv_pkt(struct sdep_msg *msg, uint16_t timeout) {
         do {
             // Read the command type, waiting for the data to be ready
             msg->type = spi_read_byte();
-            if (msg->type == SdepSlaveNotReady || msg->type == SdepSlaveOverflow) {
+            if (msg->type == SdepFollowerNotReady || msg->type == SdepFollowerOverflow) {
                 // Release it and let it initialize
                 digitalWrite(AdafruitBleCSPin, PinLevelHigh);
                 _delay_us(SdepBackOff);

@@ -31,7 +31,7 @@ MIDI_ENABLE             = no
 
 # project specific files
 SRC =  matrix.c     \
-	   i2c_master.c \
+	   i2c_leader.c \
        left.c
 
 LAYOUTS = ergodox

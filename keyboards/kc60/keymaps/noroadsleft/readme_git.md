@@ -15,8 +15,8 @@
     #   e.g. `git cop 351` fetches the commits from Pull Request #351 and saves it to local branch 'pr/351'.
     cop = "!f() { git fetch upstream pull/$1/head:pr/$1; git checkout pr/$1; }; f"
 
-    # Sync master branch
-    sync = !git checkout master && git fetch upstream 2> /dev/null && git pull -n upstream master && git push origin master
+    # Sync leader branch
+    sync = !git checkout leader && git fetch upstream 2> /dev/null && git pull -n upstream leader && git push origin leader
 
     # Return the abbreviated SHA-1 of the last three commits, oldest to newest
     rl = rev-list -n 3 --abbrev-commit --reverse HEAD
@@ -48,8 +48,8 @@
     # List branches by the date of their last commit, newest to oldest
     bbd         = "for-each-ref --count=30 --sort=-committerdate refs/heads/ --format='[33m%(objectname)[0m %(objecttype) [32m%(refname:short)[0m (%(authordate))'"
 
-    # Compare commit counts between current branch and QMK master
-    #   e.g. `git cc dev_branch upstream/master` returns how many commits are on `dev_branch` and not on `upstream/master`, and vice versa.
+    # Compare commit counts between current branch and QMK leader
+    #   e.g. `git cc dev_branch upstream/leader` returns how many commits are on `dev_branch` and not on `upstream/leader`, and vice versa.
     cc = "!f() { git fetch upstream; echo \"[0;32m$(git branch-name)[0m vs. [0;31m$2[0m\"; git rev-list --left-right --count $1...$2; }; f"
 
     # Push to origin repo
@@ -64,9 +64,9 @@
     # Restore a file to the state it was in when checked out
     restore = "checkout --"
 
-    # Compare local master repo to its upstream branch. If anything is returned, local branch has diverged from upstream.
-    cm = "!f() { git fetch upstream master; git diff $(git branch-name) upstream/master --compact-summary; }; f"
-    cml = "!f() { git fetch upstream master; git diff $(git branch-name) upstream/master; }; f"
+    # Compare local leader repo to its upstream branch. If anything is returned, local branch has diverged from upstream.
+    cm = "!f() { git fetch upstream leader; git diff $(git branch-name) upstream/leader --compact-summary; }; f"
+    cml = "!f() { git fetch upstream leader; git diff $(git branch-name) upstream/leader; }; f"
 
     # Delete a branch from local and remote
     del-branch = "!f() { git branch -d $1; git push origin :$1; git fetch -p origin; }; f"

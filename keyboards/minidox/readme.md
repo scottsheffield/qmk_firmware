@@ -22,6 +22,6 @@ See [build environment setup](https://docs.qmk.fm/#/getting_started_build_tools)
 A build guide for putting together the MiniDox v1 can be found here: [MiniDox Build Log / Guide](http://imgur.com/a/vImo6)
 
 
-## Choosing which board to plug the USB cable into (choosing Master)
+## Choosing which board to plug the USB cable into (choosing Leader)
 
 Because the two boards are identical, the firmware has logic to differentiate the left and right board. It uses two strategies to figure things out, [EE_HANDS](https://docs.qmk.fm/#/feature_split_keyboard?id=handedness-by-eeprom) or [by define](https://docs.qmk.fm/#/feature_split_keyboard?id=handedness-by-define). See [setting-handedness](https://docs.qmk.fm/#/config_options?id=setting-handedness) for more information.

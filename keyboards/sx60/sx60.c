@@ -1,5 +1,5 @@
 #include "sx60.h"
-#include "i2cmaster.h"
+#include "i2cleader.h"
 
 
 bool i2c_initialized = 0;

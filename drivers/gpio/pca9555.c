@@ -13,12 +13,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "i2c_master.h"
+#include "i2c_leader.h"
 #include "pca9555.h"
 
 #include "debug.h"
 
-#define SLAVE_TO_ADDR(n) (n << 1)
+#define FOLLOWER_TO_ADDR(n) (n << 1)
 #define TIMEOUT 100
 
 enum {
@@ -32,7 +32,7 @@ enum {
     CMD_CONFIG_1,
 };
 
-void pca9555_init(uint8_t slave_addr) {
+void pca9555_init(uint8_t follower_addr) {
     static uint8_t s_init = 0;
     if (!s_init) {
         i2c_init();
@@ -41,12 +41,12 @@ void pca9555_init(uint8_t slave_addr) {
     }
 
     // TODO: could check device connected
-    // i2c_start(SLAVE_TO_ADDR(slave) | I2C_WRITE);
+    // i2c_start(FOLLOWER_TO_ADDR(follower) | I2C_WRITE);
     // i2c_stop();
 }
 
-void pca9555_set_config(uint8_t slave_addr, uint8_t port, uint8_t conf) {
-    uint8_t addr = SLAVE_TO_ADDR(slave_addr);
+void pca9555_set_config(uint8_t follower_addr, uint8_t port, uint8_t conf) {
+    uint8_t addr = FOLLOWER_TO_ADDR(follower_addr);
     uint8_t cmd  = port ? CMD_CONFIG_1 : CMD_CONFIG_0;
 
     i2c_status_t ret = i2c_writeReg(addr, cmd, &conf, sizeof(conf), TIMEOUT);
@@ -55,8 +55,8 @@ void pca9555_set_config(uint8_t slave_addr, uint8_t port, uint8_t conf) {
     }
 }
 
-void pca9555_set_output(uint8_t slave_addr, uint8_t port, uint8_t conf) {
-    uint8_t addr = SLAVE_TO_ADDR(slave_addr);
+void pca9555_set_output(uint8_t follower_addr, uint8_t port, uint8_t conf) {
+    uint8_t addr = FOLLOWER_TO_ADDR(follower_addr);
     uint8_t cmd  = port ? CMD_OUTPUT_1 : CMD_OUTPUT_0;
 
     i2c_status_t ret = i2c_writeReg(addr, cmd, &conf, sizeof(conf), TIMEOUT);
@@ -65,8 +65,8 @@ void pca9555_set_output(uint8_t slave_addr, uint8_t port, uint8_t conf) {
     }
 }
 
-uint8_t pca9555_readPins(uint8_t slave_addr, uint8_t port) {
-    uint8_t addr = SLAVE_TO_ADDR(slave_addr);
+uint8_t pca9555_readPins(uint8_t follower_addr, uint8_t port) {
+    uint8_t addr = FOLLOWER_TO_ADDR(follower_addr);
     uint8_t cmd  = port ? CMD_INPUT_1 : CMD_INPUT_0;
 
     uint8_t      data = 0;
@@ -77,8 +77,8 @@ uint8_t pca9555_readPins(uint8_t slave_addr, uint8_t port) {
     return data;
 }
 
-uint16_t pca9555_readAllPins(uint8_t slave_addr) {
-    uint8_t addr = SLAVE_TO_ADDR(slave_addr);
+uint16_t pca9555_readAllPins(uint8_t follower_addr) {
+    uint8_t addr = FOLLOWER_TO_ADDR(follower_addr);
 
     typedef union {
         uint8_t  u8[2];

@@ -58,7 +58,7 @@ class FrameRouter : public testing::Test {
 
     void activate_router(uint8_t num) {
         current_router_buffer = router_buffers + num;
-        router_set_master(num == 0);
+        router_set_leader(num == 0);
     }
 
     void simulate_transport(uint8_t from, uint8_t to) {
@@ -97,7 +97,7 @@ void send_data(uint8_t link, const uint8_t* data, uint16_t size) { FrameRouter::
 void transport_recv_frame(uint8_t from, uint8_t* data, uint16_t size) { FrameRouter::Instance->transport_recv_frame(from, data, size); }
 }
 
-TEST_F(FrameRouter, master_broadcast_is_received_by_everyone) {
+TEST_F(FrameRouter, leader_broadcast_is_received_by_everyone) {
     frame_buffer_t data;
     data.data = {0xAB, 0x70, 0x55, 0xBB};
     activate_router(0);
@@ -115,7 +115,7 @@ TEST_F(FrameRouter, master_broadcast_is_received_by_everyone) {
     EXPECT_EQ(router_buffers[2].send_buffers[UP_LINK].size(), 0);
 }
 
-TEST_F(FrameRouter, master_send_is_received_by_targets) {
+TEST_F(FrameRouter, leader_send_is_received_by_targets) {
     frame_buffer_t data;
     data.data = {0xAB, 0x70, 0x55, 0xBB};
     activate_router(0);
@@ -138,7 +138,7 @@ TEST_F(FrameRouter, master_send_is_received_by_targets) {
     EXPECT_EQ(router_buffers[3].send_buffers[UP_LINK].size(), 0);
 }
 
-TEST_F(FrameRouter, first_link_sends_to_master) {
+TEST_F(FrameRouter, first_link_sends_to_leader) {
     frame_buffer_t data;
     data.data = {0xAB, 0x70, 0x55, 0xBB};
     activate_router(1);
@@ -152,7 +152,7 @@ TEST_F(FrameRouter, first_link_sends_to_master) {
     EXPECT_EQ(router_buffers[0].send_buffers[UP_LINK].size(), 0);
 }
 
-TEST_F(FrameRouter, second_link_sends_to_master) {
+TEST_F(FrameRouter, second_link_sends_to_leader) {
     frame_buffer_t data;
     data.data = {0xAB, 0x70, 0x55, 0xBB};
     activate_router(2);
@@ -170,7 +170,7 @@ TEST_F(FrameRouter, second_link_sends_to_master) {
     EXPECT_EQ(router_buffers[0].send_buffers[UP_LINK].size(), 0);
 }
 
-TEST_F(FrameRouter, master_sends_to_master_does_nothing) {
+TEST_F(FrameRouter, leader_sends_to_leader_does_nothing) {
     frame_buffer_t data;
     data.data = {0xAB, 0x70, 0x55, 0xBB};
     activate_router(0);
@@ -188,7 +188,7 @@ TEST_F(FrameRouter, link_sends_to_other_link_does_nothing) {
     EXPECT_EQ(router_buffers[1].send_buffers[DOWN_LINK].size(), 0);
 }
 
-TEST_F(FrameRouter, master_receives_on_uplink_does_nothing) {
+TEST_F(FrameRouter, leader_receives_on_uplink_does_nothing) {
     frame_buffer_t data;
     data.data = {0xAB, 0x70, 0x55, 0xBB};
     activate_router(1);

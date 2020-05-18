@@ -8,8 +8,8 @@ rgblight_config_t rgblight_config;
 #endif
 
 #if KEYBOARD_helix_rev2
-extern uint8_t is_master;
-bool is_keyboard_master(void) { return is_master; }
+extern uint8_t is_leader;
+bool is_keyboard_leader(void) { return is_leader; }
 #endif
 
 static void render_logo(void)
@@ -130,11 +130,11 @@ static void render_status(void)
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 #if KEYBOARD_helix_rev2
-  if (is_keyboard_master())
+  if (is_keyboard_leader())
     return OLED_ROTATION_270;
   return rotation;
 #else
-  if (is_keyboard_master())
+  if (is_keyboard_leader())
     return OLED_ROTATION_90;
   return rotation;
 #endif
@@ -183,7 +183,7 @@ static void render_status(void)
 
 void oled_task_user(void)
 {
-    if (is_keyboard_master())
+    if (is_keyboard_leader())
         render_status();
     else
     {

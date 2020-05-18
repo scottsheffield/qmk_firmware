@@ -46,4 +46,4 @@ SRC +=	keyboards/wilba_tech/wt_main.c \
 		drivers/issi/is31fl3731.c \
 		ws2812.c
 
-QUANTUM_LIB_SRC += i2c_master.c 
+QUANTUM_LIB_SRC += i2c_leader.c 

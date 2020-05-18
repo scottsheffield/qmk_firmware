@@ -1,5 +1,5 @@
 SRC += matrix.c
-QUANTUM_LIB_SRC += i2c_master.c
+QUANTUM_LIB_SRC += i2c_leader.c
 
 CFLAGS += "-Wno-error=deprecated"
 

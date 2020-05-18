@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "is31fl3218.h"
-#include "i2c_master.h"
+#include "i2c_leader.h"
 
 // This is the full 8-bit address
 #define ISSI_ADDRESS 0b10101000

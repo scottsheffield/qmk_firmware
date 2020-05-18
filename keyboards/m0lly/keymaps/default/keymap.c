@@ -88,7 +88,7 @@ void led_set_user(uint8_t usb_led) {
 
 void matrix_init_user(void) {
   #ifdef USE_I2C
-    i2c_master_init();
+    i2c_leader_init();
     #ifdef SSD1306OLED
       // calls code for the SSD1306 OLED
       _delay_ms(400);

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USE_SERIAL
 
 /* Select hand configuration */
-//#define MASTER_LEFT
+//#define LEADER_LEFT
 #define EE_HANDS
 
 #undef RGBLED_NUM

@@ -1,6 +1,6 @@
 #include "drashna.h"
 
-uint8_t is_master;
+uint8_t is_leader;
 
 #ifdef OLED_DRIVER_ENABLE
 #    define KEYLOGGER_LENGTH 10
@@ -147,14 +147,14 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
         add_keylog(keycode);
 #endif
 #ifndef SPLIT_KEYBOARD
-        if (keycode == RESET && !is_master) {
+        if (keycode == RESET && !is_leader) {
             return false;
         }
 #endif
     }
     return true;
 }
-void matrix_init_keymap(void) { is_master = (uint8_t)is_keyboard_master(); }
+void matrix_init_keymap(void) { is_leader = (uint8_t)is_keyboard_leader(); }
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_180; }
@@ -328,7 +328,7 @@ void oled_task_user(void) {
 #    endif
 
     update_log();
-    if (is_master) {
+    if (is_leader) {
         render_status_main();  // Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
 #    ifdef SPLIT_TRANSPORT_MIRROR

@@ -93,12 +93,12 @@ typedef union {
     uint32_t FSOUTINV:1;       /*!< bit:     10  Frame Sync Output Invert           */
     uint32_t SCKSEL:1;         /*!< bit:     11  Serial Clock Select                */
     uint32_t SCKOUTINV:1;      /*!< bit:     12  Serial Clock Output Invert         */
-    uint32_t MCKSEL:1;         /*!< bit:     13  Master Clock Select                */
-    uint32_t MCKEN:1;          /*!< bit:     14  Master Clock Enable                */
-    uint32_t MCKOUTINV:1;      /*!< bit:     15  Master Clock Output Invert         */
-    uint32_t MCKDIV:6;         /*!< bit: 16..21  Master Clock Division Factor       */
+    uint32_t MCKSEL:1;         /*!< bit:     13  Leader Clock Select                */
+    uint32_t MCKEN:1;          /*!< bit:     14  Leader Clock Enable                */
+    uint32_t MCKOUTINV:1;      /*!< bit:     15  Leader Clock Output Invert         */
+    uint32_t MCKDIV:6;         /*!< bit: 16..21  Leader Clock Division Factor       */
     uint32_t :2;               /*!< bit: 22..23  Reserved                           */
-    uint32_t MCKOUTDIV:6;      /*!< bit: 24..29  Master Clock Output Division Factor */
+    uint32_t MCKOUTDIV:6;      /*!< bit: 24..29  Leader Clock Output Division Factor */
     uint32_t :2;               /*!< bit: 30..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -151,26 +151,26 @@ typedef union {
 #define I2S_CLKCTRL_FSOUTINV        (_U_(0x1) << I2S_CLKCTRL_FSOUTINV_Pos)
 #define I2S_CLKCTRL_SCKSEL_Pos      11           /**< \brief (I2S_CLKCTRL) Serial Clock Select */
 #define I2S_CLKCTRL_SCKSEL          (_U_(0x1) << I2S_CLKCTRL_SCKSEL_Pos)
-#define   I2S_CLKCTRL_SCKSEL_MCKDIV_Val   _U_(0x0)   /**< \brief (I2S_CLKCTRL) Divided Master Clock n is used as Serial Clock n source */
+#define   I2S_CLKCTRL_SCKSEL_MCKDIV_Val   _U_(0x0)   /**< \brief (I2S_CLKCTRL) Divided Leader Clock n is used as Serial Clock n source */
 #define   I2S_CLKCTRL_SCKSEL_SCKPIN_Val   _U_(0x1)   /**< \brief (I2S_CLKCTRL) SCKn input pin is used as Serial Clock n source */
 #define I2S_CLKCTRL_SCKSEL_MCKDIV   (I2S_CLKCTRL_SCKSEL_MCKDIV_Val << I2S_CLKCTRL_SCKSEL_Pos)
 #define I2S_CLKCTRL_SCKSEL_SCKPIN   (I2S_CLKCTRL_SCKSEL_SCKPIN_Val << I2S_CLKCTRL_SCKSEL_Pos)
 #define I2S_CLKCTRL_SCKOUTINV_Pos   12           /**< \brief (I2S_CLKCTRL) Serial Clock Output Invert */
 #define I2S_CLKCTRL_SCKOUTINV       (_U_(0x1) << I2S_CLKCTRL_SCKOUTINV_Pos)
-#define I2S_CLKCTRL_MCKSEL_Pos      13           /**< \brief (I2S_CLKCTRL) Master Clock Select */
+#define I2S_CLKCTRL_MCKSEL_Pos      13           /**< \brief (I2S_CLKCTRL) Leader Clock Select */
 #define I2S_CLKCTRL_MCKSEL          (_U_(0x1) << I2S_CLKCTRL_MCKSEL_Pos)
-#define   I2S_CLKCTRL_MCKSEL_GCLK_Val     _U_(0x0)   /**< \brief (I2S_CLKCTRL) GCLK_I2S_n is used as Master Clock n source */
-#define   I2S_CLKCTRL_MCKSEL_MCKPIN_Val   _U_(0x1)   /**< \brief (I2S_CLKCTRL) MCKn input pin is used as Master Clock n source */
+#define   I2S_CLKCTRL_MCKSEL_GCLK_Val     _U_(0x0)   /**< \brief (I2S_CLKCTRL) GCLK_I2S_n is used as Leader Clock n source */
+#define   I2S_CLKCTRL_MCKSEL_MCKPIN_Val   _U_(0x1)   /**< \brief (I2S_CLKCTRL) MCKn input pin is used as Leader Clock n source */
 #define I2S_CLKCTRL_MCKSEL_GCLK     (I2S_CLKCTRL_MCKSEL_GCLK_Val   << I2S_CLKCTRL_MCKSEL_Pos)
 #define I2S_CLKCTRL_MCKSEL_MCKPIN   (I2S_CLKCTRL_MCKSEL_MCKPIN_Val << I2S_CLKCTRL_MCKSEL_Pos)
-#define I2S_CLKCTRL_MCKEN_Pos       14           /**< \brief (I2S_CLKCTRL) Master Clock Enable */
+#define I2S_CLKCTRL_MCKEN_Pos       14           /**< \brief (I2S_CLKCTRL) Leader Clock Enable */
 #define I2S_CLKCTRL_MCKEN           (_U_(0x1) << I2S_CLKCTRL_MCKEN_Pos)
-#define I2S_CLKCTRL_MCKOUTINV_Pos   15           /**< \brief (I2S_CLKCTRL) Master Clock Output Invert */
+#define I2S_CLKCTRL_MCKOUTINV_Pos   15           /**< \brief (I2S_CLKCTRL) Leader Clock Output Invert */
 #define I2S_CLKCTRL_MCKOUTINV       (_U_(0x1) << I2S_CLKCTRL_MCKOUTINV_Pos)
-#define I2S_CLKCTRL_MCKDIV_Pos      16           /**< \brief (I2S_CLKCTRL) Master Clock Division Factor */
+#define I2S_CLKCTRL_MCKDIV_Pos      16           /**< \brief (I2S_CLKCTRL) Leader Clock Division Factor */
 #define I2S_CLKCTRL_MCKDIV_Msk      (_U_(0x3F) << I2S_CLKCTRL_MCKDIV_Pos)
 #define I2S_CLKCTRL_MCKDIV(value)   (I2S_CLKCTRL_MCKDIV_Msk & ((value) << I2S_CLKCTRL_MCKDIV_Pos))
-#define I2S_CLKCTRL_MCKOUTDIV_Pos   24           /**< \brief (I2S_CLKCTRL) Master Clock Output Division Factor */
+#define I2S_CLKCTRL_MCKOUTDIV_Pos   24           /**< \brief (I2S_CLKCTRL) Leader Clock Output Division Factor */
 #define I2S_CLKCTRL_MCKOUTDIV_Msk   (_U_(0x3F) << I2S_CLKCTRL_MCKOUTDIV_Pos)
 #define I2S_CLKCTRL_MCKOUTDIV(value) (I2S_CLKCTRL_MCKOUTDIV_Msk & ((value) << I2S_CLKCTRL_MCKOUTDIV_Pos))
 #define I2S_CLKCTRL_MASK            _U_(0x3F3FFFFF) /**< \brief (I2S_CLKCTRL) MASK Register */

@@ -30,5 +30,5 @@ API_SYSEX_ENABLE        = no
 RGBLIGHT_ENABLE         = no
 
 # project specific files
-SRC = twimaster.c \
+SRC = twileader.c \
 	  matrix.c

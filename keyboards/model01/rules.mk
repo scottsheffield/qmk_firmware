@@ -27,7 +27,7 @@ MIDI_ENABLE = no            # MIDI support
 UNICODE_ENABLE = no         # Unicode
 
 CUSTOM_MATRIX = yes
-QUANTUM_LIB_SRC += i2c_master.c
+QUANTUM_LIB_SRC += i2c_leader.c
 SRC += leds.c \
 	   matrix.c
 

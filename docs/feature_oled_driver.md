@@ -14,7 +14,7 @@ Tested combinations:
 
 Hardware configurations using Arm-based microcontrollers or different sizes of OLED modules may be compatible, but are untested.
 
-!> Warning: This OLED driver currently uses the new i2c_master driver from Split Common code. If your split keyboard uses I2C to communicate between sides, this driver could cause an address conflict (serial is fine). Please contact your keyboard vendor and ask them to migrate to the latest Split Common code to fix this. In addition, the display timeout system to reduce OLED burn-in also uses Split Common to detect keypresses, so you will need to implement custom timeout logic for non-Split Common keyboards.
+!> Warning: This OLED driver currently uses the new i2c_leader driver from Split Common code. If your split keyboard uses I2C to communicate between sides, this driver could cause an address conflict (serial is fine). Please contact your keyboard vendor and ask them to migrate to the latest Split Common code to fix this. In addition, the display timeout system to reduce OLED burn-in also uses Split Common to detect keypresses, so you will need to implement custom timeout logic for non-Split Common keyboards.
 
 ## Usage
 
@@ -74,12 +74,12 @@ static void render_logo(void) {
 
 ## Other Examples
 
-In split keyboards, it is very common to have two OLED displays that each render different content and are oriented or flipped differently. You can do this by switching which content to render by using the return value from `is_keyboard_master()` or `is_keyboard_left()` found in `split_util.h`, e.g:
+In split keyboards, it is very common to have two OLED displays that each render different content and are oriented or flipped differently. You can do this by switching which content to render by using the return value from `is_keyboard_leader()` or `is_keyboard_left()` found in `split_util.h`, e.g:
 
 ```c
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (!is_keyboard_master()) {
+    if (!is_keyboard_leader()) {
         return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
     }
 
@@ -87,7 +87,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 void oled_task_user(void) {
-    if (is_keyboard_master()) {
+    if (is_keyboard_leader()) {
         render_status();  // Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
         render_logo();  // Renders a static logo

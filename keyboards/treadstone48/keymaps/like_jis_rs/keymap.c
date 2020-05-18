@@ -22,7 +22,7 @@
 extern rgblight_config_t rgblight_config;
 #endif
 
-extern uint8_t is_master;
+extern uint8_t is_leader;
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
@@ -239,14 +239,14 @@ static inline void render_status(void) {
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 
-//   if (is_keyboard_master())
+//   if (is_keyboard_leader())
 //     return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
   return rotation;
 }
 
 void oled_task_user(void) {
 
-  if (is_keyboard_master()) {
+  if (is_keyboard_leader()) {
     render_status();
   } else {
     render_logo();

@@ -26,5 +26,5 @@ A basic ErgoDox layout with Planck-like tri-layer support.
     ```
 1. Flash right half:
     ```bash
-    $ make ergodox_infinity:dudeofawesome:dfu-util MASTER=right
+    $ make ergodox_infinity:dudeofawesome:dfu-util LEADER=right
     ```

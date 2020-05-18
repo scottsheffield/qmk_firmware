@@ -2,7 +2,7 @@
 
 The keymap looks like a full layout keymap.
 
-This is because the left part of the keyboard acts as the masterm coordinating all four part.
+This is because the left part of the keyboard acts as the leader coordinating all four part.
 
 When using the keyboard to connect the other three parts, this keymap overwrites the individual keymaps of the single modules.
 

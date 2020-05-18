@@ -10,7 +10,7 @@
 #endif
 
 extern keymap_config_t keymap_config;
-extern uint8_t is_master;
+extern uint8_t is_leader;
 
 #ifdef RGBLIGHT_ENABLE
 //Following line allows macro to read current RGB settings
@@ -149,7 +149,7 @@ void matrix_scan_user(void) {
 }
 
 void matrix_render_user(struct CharacterMatrix *matrix) {
-  if (is_master) {
+  if (is_leader) {
     matrix_write_ln(matrix, read_layer_state());
     matrix_write_ln(matrix, read_usb_state());
     matrix_write_ln(matrix, read_keylogs());

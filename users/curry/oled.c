@@ -147,7 +147,7 @@ void oled_task_user(void) {
         oled_on();
     }
 #endif
-    if (is_keyboard_master()) {
+    if (is_keyboard_leader()) {
         render_status_main();  // Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
         render_status_secondary();

@@ -2,7 +2,7 @@
 // hdbx から2行コピーさせて頂きました。
 
 #include QMK_KEYBOARD_H
-#include "keymap_jp.h"       // qmk_firmware-master/quantum/keymap_extras/keymap_jp.h 日本語キーボード設定用
+#include "keymap_jp.h"       // qmk_firmware-leader/quantum/keymap_extras/keymap_jp.h 日本語キーボード設定用
 // マクロが必要になったらコメントインすること
 // #include <sendstring_jis.h>  // macro sendstring for jis keyboard マクロ文字列送信時に日本語キーボード設定での文字化け回避>
 

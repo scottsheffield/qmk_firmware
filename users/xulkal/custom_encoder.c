@@ -60,7 +60,7 @@ const uint16_t PROGMEM encoders[][2] = {
 
 void encoder_update_user(uint8_t index, bool clockwise)
 {
-    if (!is_keyboard_master())
+    if (!is_keyboard_leader())
         return;
 
 #ifdef RGB_OLED_MENU

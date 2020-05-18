@@ -19,5 +19,5 @@ Base Layers
     ```
 3. Flash right half:
     ```bash
-    make ergodox_infinity:input_club:dfu-util MASTER=right
+    make ergodox_infinity:input_club:dfu-util LEADER=right
     ```

@@ -57,7 +57,7 @@ Readies a `git commit` command, moves the cursor between the quotation marks, th
 
 | Condition | Output |
 | :-------- | :----- |
-| If <kbd>Shift</kbd> is active | `master` |
+| If <kbd>Shift</kbd> is active | `leader` |
 | Otherwise | `$(git branch-name)` |
 
 `$(git branch-name)` is a [git alias](./readme_git.md) that returns the name of the current branch. This macro disables the Macro layer when finished.

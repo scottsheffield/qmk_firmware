@@ -191,10 +191,10 @@ void rgblight_sethsv_range(uint8_t hue, uint8_t sat, uint8_t val, uint8_t start,
 void rgblight_setrgb(uint8_t r, uint8_t g, uint8_t b);
 
 #    ifndef RGBLIGHT_SPLIT
-void rgblight_setrgb_master(uint8_t r, uint8_t g, uint8_t b);
-void rgblight_setrgb_slave(uint8_t r, uint8_t g, uint8_t b);
-void rgblight_sethsv_master(uint8_t hue, uint8_t sat, uint8_t val);
-void rgblight_sethsv_slave(uint8_t hue, uint8_t sat, uint8_t val);
+void rgblight_setrgb_leader(uint8_t r, uint8_t g, uint8_t b);
+void rgblight_setrgb_follower(uint8_t r, uint8_t g, uint8_t b);
+void rgblight_sethsv_leader(uint8_t hue, uint8_t sat, uint8_t val);
+void rgblight_sethsv_follower(uint8_t hue, uint8_t sat, uint8_t val);
 #    endif
 
 /*   effect mode change */
@@ -281,11 +281,11 @@ typedef struct _rgblight_syncinfo_t {
     rgblight_status_t status;
 } rgblight_syncinfo_t;
 
-/* for split keyboard master side */
+/* for split keyboard leader side */
 uint8_t rgblight_get_change_flags(void);
 void    rgblight_clear_change_flags(void);
 void    rgblight_get_syncinfo(rgblight_syncinfo_t *syncinfo);
-/* for split keyboard slave side */
+/* for split keyboard follower side */
 void rgblight_update_sync(rgblight_syncinfo_t *syncinfo, bool write_to_eeprom);
 #    endif
 

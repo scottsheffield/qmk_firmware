@@ -37,10 +37,10 @@ dfu-util --device 1c11:b007 -D .build/ergodox_infinity_narze_left.bin
 ```
 
 #### Right side (Docker)
-You have to override `usb_args` in order to pass `MASTER=right` to docker using provided build script.
+You have to override `usb_args` in order to pass `LEADER=right` to docker using provided build script.
 ```
 cd /path/to/qmk_firmware
-usb_args="-e MASTER=right" util/docker_build.sh ergodox_infinity:narze
+usb_args="-e LEADER=right" util/docker_build.sh ergodox_infinity:narze
 avr-objcopy -Iihex -Obinary .build/ergodox_infinity_narze.hex .build/ergodox_infinity_narze_right.bin
 dfu-util --device 1c11:b007 -D .build/ergodox_infinity_narze_right.bin
 ```

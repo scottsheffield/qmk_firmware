@@ -62,19 +62,19 @@ To flash your firmware take a look at: [Flashing Instructions and Bootloader Inf
 Under Windows the most convenient way is installing the [QMK Drivers](https://github.com/qmk/qmk_driver_installer/releases) and use the [QMK Toolbox](https://github.com/qmk/qmk_toolbox/releases).
 
 
-## Choosing which board to plug the USB cable into (choosing Master)
+## Choosing which board to plug the USB cable into (choosing Leader)
 
-### Setting the right or left hand as master
+### Setting the right or left hand as leader
 
 If you always plug the usb cable into the right board, add an extra flag to your `config.h`
 ```
- #define MASTER_RIGHT
+ #define LEADER_RIGHT
 ```
 
 OR
 
 ```
- #define MASTER_LEFT
+ #define LEADER_LEFT
 ```
 
 
@@ -84,7 +84,7 @@ Notes on Using Pro Micro 3.3V
 Do update the `F_CPU` parameter in `rules.mk` to `8000000` which reflects
 the frequency on the 3.3V board.
 
-Also, if the slave board is producing weird characters in certain columns,
+Also, if the follower board is producing weird characters in certain columns,
 update the following line in `matrix.c` to the following:
 
 ```

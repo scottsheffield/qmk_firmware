@@ -26,7 +26,7 @@ typedef struct board_info_t      board_info_t;
 typedef struct board_interface_t board_interface_t;
 
 struct board_info_t {
-    bool               master;
+    bool               leader;
     bool               initialized;
     uint8_t            i2c_address;
     pin_t              row_pins[NUM_ROWS];

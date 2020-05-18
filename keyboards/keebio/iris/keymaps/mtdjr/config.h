@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Select hand configuration */
 
-#define MASTER_LEFT
+#define LEADER_LEFT
 
 // #define AUDIO_CLICKY
 // #define AUDIO_CLICKY_ON
@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define AUDIO_CLICKY_FREQ_RANDOMNESS 0.1f
 // #define AUDIO_CLICKY_FREQ_MAX 100.0f
 
-// #define MASTER_RIGHT
+// #define LEADER_RIGHT
 // #define EE_HANDS
 
 // #undef RGBLED_NUM

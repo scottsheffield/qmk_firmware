@@ -31,7 +31,7 @@ MIDI_ENABLE             = no
 
 # project specific files
 SRC = \
-    twimaster.c \
+    twileader.c \
 	  matrix.c    \
     expander.c  \
 

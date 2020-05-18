@@ -5,7 +5,7 @@ bool isScrollMode = false;
 
 void pointing_device_init(void){
 
-  SPI_Init(SPI_SPEED_FCPU_DIV_8 | SPI_MODE_MASTER);
+  SPI_Init(SPI_SPEED_FCPU_DIV_8 | SPI_MODE_LEADER);
 
   // Set as output
   TP_RESET_INIT;

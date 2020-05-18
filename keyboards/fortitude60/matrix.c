@@ -187,19 +187,19 @@ uint8_t _matrix_scan(void)
 }
 
 int serial_transaction(void) {
-    int slaveOffset = (isLeftHand) ? (ROWS_PER_HAND) : 0;
+    int followerOffset = (isLeftHand) ? (ROWS_PER_HAND) : 0;
 
     if (serial_update_buffers()) {
         return 1;
     }
 
     for (int i = 0; i < ROWS_PER_HAND; ++i) {
-        matrix[slaveOffset+i] = serial_slave_buffer[i];
+        matrix[followerOffset+i] = serial_follower_buffer[i];
     }
 
 #ifdef BACKLIGHT_ENABLE
-    // Write backlight level for slave to read
-    serial_master_buffer[SERIAL_LED_ADDR] = backlight_config.enable ? backlight_config.level : 0;
+    // Write backlight level for follower to read
+    serial_leader_buffer[SERIAL_LED_ADDR] = backlight_config.enable ? backlight_config.level : 0;
 #endif
     return 0;
 }
@@ -217,9 +217,9 @@ uint8_t matrix_scan(void)
 
         if (error_count > ERROR_DISCONNECT_COUNT) {
             // reset other half if disconnected
-            int slaveOffset = (isLeftHand) ? (ROWS_PER_HAND) : 0;
+            int followerOffset = (isLeftHand) ? (ROWS_PER_HAND) : 0;
             for (int i = 0; i < ROWS_PER_HAND; ++i) {
-                matrix[slaveOffset+i] = 0;
+                matrix[followerOffset+i] = 0;
             }
         }
     } else {
@@ -231,18 +231,18 @@ uint8_t matrix_scan(void)
     return ret;
 }
 
-void matrix_slave_scan(void) {
+void matrix_follower_scan(void) {
     _matrix_scan();
 
     int offset = (isLeftHand) ? 0 : ROWS_PER_HAND;
 
     for (int i = 0; i < ROWS_PER_HAND; ++i) {
-        serial_slave_buffer[i] = matrix[offset+i];
+        serial_follower_buffer[i] = matrix[offset+i];
     }
 
 #ifdef BACKLIGHT_ENABLE
-    // Read backlight level sent from master and update level on slave
-    backlight_set(serial_master_buffer[SERIAL_LED_ADDR]);
+    // Read backlight level sent from leader and update level on follower
+    backlight_set(serial_leader_buffer[SERIAL_LED_ADDR]);
 #endif
 }
 

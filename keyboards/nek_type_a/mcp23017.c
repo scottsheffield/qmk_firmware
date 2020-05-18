@@ -37,12 +37,12 @@ static const char *twi_err_str(uint8_t res) {
             return "BUSFAULT";
         case TWI_ERROR_BusCaptureTimeout:
             return "BUSTIMEOUT";
-        case TWI_ERROR_SlaveResponseTimeout:
-            return "SLAVETIMEOUT";
-        case TWI_ERROR_SlaveNotReady:
-            return "SLAVENOTREADY";
-        case TWI_ERROR_SlaveNAK:
-            return "SLAVENAK";
+        case TWI_ERROR_FollowerResponseTimeout:
+            return "FOLLOWERTIMEOUT";
+        case TWI_ERROR_FollowerNotReady:
+            return "FOLLOWERNOTREADY";
+        case TWI_ERROR_FollowerNAK:
+            return "FOLLOWERNAK";
         default:
             return "UNKNOWN";
     }

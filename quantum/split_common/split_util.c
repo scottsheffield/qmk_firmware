@@ -54,31 +54,31 @@ __attribute__((weak)) bool is_keyboard_left(void) {
     return readPin(SPLIT_HAND_PIN);
 #elif defined(EE_HANDS)
     return eeconfig_read_handedness();
-#elif defined(MASTER_RIGHT)
-    return !is_keyboard_master();
+#elif defined(LEADER_RIGHT)
+    return !is_keyboard_leader();
 #endif
 
-    return is_keyboard_master();
+    return is_keyboard_leader();
 }
 
-__attribute__((weak)) bool is_keyboard_master(void) {
-    static enum { UNKNOWN, MASTER, SLAVE } usbstate = UNKNOWN;
+__attribute__((weak)) bool is_keyboard_leader(void) {
+    static enum { UNKNOWN, LEADER, FOLLOWER } usbstate = UNKNOWN;
 
     // only check once, as this is called often
     if (usbstate == UNKNOWN) {
 #if defined(SPLIT_USB_DETECT) || defined(PROTOCOL_CHIBIOS)
-        usbstate = waitForUsb() ? MASTER : SLAVE;
+        usbstate = waitForUsb() ? LEADER : FOLLOWER;
 #elif defined(__AVR__)
         USBCON |= (1 << OTGPADE);  // enables VBUS pad
         wait_us(5);
 
-        usbstate = (USBSTA & (1 << VBUS)) ? MASTER : SLAVE;  // checks state of VBUS
+        usbstate = (USBSTA & (1 << VBUS)) ? LEADER : FOLLOWER;  // checks state of VBUS
 #else
-        usbstate = MASTER;
+        usbstate = LEADER;
 #endif
     }
 
-    return (usbstate == MASTER);
+    return (usbstate == LEADER);
 }
 
 // this code runs before the keyboard is fully initialized
@@ -94,19 +94,19 @@ void split_pre_init(void) {
     }
 #endif
 
-    if (is_keyboard_master()) {
+    if (is_keyboard_leader()) {
 #if defined(USE_I2C) && defined(SSD1306OLED)
-        matrix_master_OLED_init();
+        matrix_leader_OLED_init();
 #endif
-        transport_master_init();
+        transport_leader_init();
     }
 }
 
 // this code runs after the keyboard is fully initialized
-//   - avoids race condition during matrix_init_quantum where slave can start
+//   - avoids race condition during matrix_init_quantum where follower can start
 //     receiving before the init process has completed
 void split_post_init(void) {
-    if (!is_keyboard_master()) {
-        transport_slave_init();
+    if (!is_keyboard_leader()) {
+        transport_follower_init();
     }
 }

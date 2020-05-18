@@ -1,4 +1,4 @@
-#include "../leader/leader_setup.c"
+#include "../master/leader_setup.c"
 
 bool MATRIX_SCANNED = false;
 
@@ -8,5 +8,5 @@ void matrix_scan_user(void) {
         MATRIX_SCANNED = true;
     }
 
-    #include "../leader/leader_dictionary.c"
+    #include "../master/leader_dictionary.c"
 };

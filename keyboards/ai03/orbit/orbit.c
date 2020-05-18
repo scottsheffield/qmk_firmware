@@ -189,7 +189,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 void led_set_kb(uint8_t usb_led) {
 	// put your keyboard LED indicator (ex: Caps Lock LED) toggling code here
 	
-	if (is_keyboard_master()) {
+	if (is_keyboard_leader()) {
 	
 		serial_m2s_buffer.nlock_led = IS_LED_ON(usb_led, USB_LED_NUM_LOCK);
 		serial_m2s_buffer.clock_led = IS_LED_ON(usb_led, USB_LED_CAPS_LOCK);
@@ -206,7 +206,7 @@ void led_set_kb(uint8_t usb_led) {
 
 uint32_t layer_state_set_kb(uint32_t state) {
 	
-	if (is_keyboard_master())
+	if (is_keyboard_leader())
 	{
 		
 		current_layer = biton32(state);
@@ -219,8 +219,8 @@ uint32_t layer_state_set_kb(uint32_t state) {
 		}
 		
 	}
-	// NOTE: Do not set slave LEDs here.
-	// This is not called on slave
+	// NOTE: Do not set follower LEDs here.
+	// This is not called on follower
 	
 	return layer_state_set_user(state);
 }

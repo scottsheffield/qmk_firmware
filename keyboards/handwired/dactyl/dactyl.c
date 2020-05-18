@@ -1,5 +1,5 @@
 #include "dactyl.h"
-#include "i2cmaster.h"
+#include "i2cleader.h"
 
 #ifdef SWAP_HANDS_ENABLE
 __attribute__ ((weak))

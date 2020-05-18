@@ -213,14 +213,14 @@ typedef union { // __I to avoid read-modify-write on write-to-clear register
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CPU0:1;           /*!< bit:      0  CPU 0 Break Master                 */
-    uint8_t  CPU1:1;           /*!< bit:      1  CPU 1 Break Master                 */
+    uint8_t  CPU0:1;           /*!< bit:      0  CPU 0 Break Leader                 */
+    uint8_t  CPU1:1;           /*!< bit:      1  CPU 1 Break Leader                 */
     uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
-    uint8_t  EVBRK:1;          /*!< bit:      6  Event Break Master                 */
-    uint8_t  EXTBRK:1;         /*!< bit:      7  External Break Master              */
+    uint8_t  EVBRK:1;          /*!< bit:      6  Event Break Leader                 */
+    uint8_t  EXTBRK:1;         /*!< bit:      7  External Break Leader              */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint8_t  CPU:2;            /*!< bit:  0.. 1  CPU x Break Master                 */
+    uint8_t  CPU:2;            /*!< bit:  0.. 1  CPU x Break Leader                 */
     uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -230,16 +230,16 @@ typedef union {
 #define TAL_GLOBMASK_OFFSET         0x00B        /**< \brief (TAL_GLOBMASK offset) Global Break Requests Mask */
 #define TAL_GLOBMASK_RESETVALUE     _U_(0x00)    /**< \brief (TAL_GLOBMASK reset_value) Global Break Requests Mask */
 
-#define TAL_GLOBMASK_CPU0_Pos       0            /**< \brief (TAL_GLOBMASK) CPU 0 Break Master */
+#define TAL_GLOBMASK_CPU0_Pos       0            /**< \brief (TAL_GLOBMASK) CPU 0 Break Leader */
 #define TAL_GLOBMASK_CPU0           (_U_(1) << TAL_GLOBMASK_CPU0_Pos)
-#define TAL_GLOBMASK_CPU1_Pos       1            /**< \brief (TAL_GLOBMASK) CPU 1 Break Master */
+#define TAL_GLOBMASK_CPU1_Pos       1            /**< \brief (TAL_GLOBMASK) CPU 1 Break Leader */
 #define TAL_GLOBMASK_CPU1           (_U_(1) << TAL_GLOBMASK_CPU1_Pos)
-#define TAL_GLOBMASK_CPU_Pos        0            /**< \brief (TAL_GLOBMASK) CPU x Break Master */
+#define TAL_GLOBMASK_CPU_Pos        0            /**< \brief (TAL_GLOBMASK) CPU x Break Leader */
 #define TAL_GLOBMASK_CPU_Msk        (_U_(0x3) << TAL_GLOBMASK_CPU_Pos)
 #define TAL_GLOBMASK_CPU(value)     (TAL_GLOBMASK_CPU_Msk & ((value) << TAL_GLOBMASK_CPU_Pos))
-#define TAL_GLOBMASK_EVBRK_Pos      6            /**< \brief (TAL_GLOBMASK) Event Break Master */
+#define TAL_GLOBMASK_EVBRK_Pos      6            /**< \brief (TAL_GLOBMASK) Event Break Leader */
 #define TAL_GLOBMASK_EVBRK          (_U_(0x1) << TAL_GLOBMASK_EVBRK_Pos)
-#define TAL_GLOBMASK_EXTBRK_Pos     7            /**< \brief (TAL_GLOBMASK) External Break Master */
+#define TAL_GLOBMASK_EXTBRK_Pos     7            /**< \brief (TAL_GLOBMASK) External Break Leader */
 #define TAL_GLOBMASK_EXTBRK         (_U_(0x1) << TAL_GLOBMASK_EXTBRK_Pos)
 #define TAL_GLOBMASK_MASK           _U_(0xC3)    /**< \brief (TAL_GLOBMASK) MASK Register */
 
@@ -247,14 +247,14 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CPU0:1;           /*!< bit:      0  CPU 0 Break Master                 */
-    uint8_t  CPU1:1;           /*!< bit:      1  CPU 1 Break Master                 */
+    uint8_t  CPU0:1;           /*!< bit:      0  CPU 0 Break Leader                 */
+    uint8_t  CPU1:1;           /*!< bit:      1  CPU 1 Break Leader                 */
     uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
-    uint8_t  EVBRK:1;          /*!< bit:      6  Event Break Master                 */
-    uint8_t  EXTBRK:1;         /*!< bit:      7  External Break Master              */
+    uint8_t  EVBRK:1;          /*!< bit:      6  Event Break Leader                 */
+    uint8_t  EXTBRK:1;         /*!< bit:      7  External Break Leader              */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint8_t  CPU:2;            /*!< bit:  0.. 1  CPU x Break Master                 */
+    uint8_t  CPU:2;            /*!< bit:  0.. 1  CPU x Break Leader                 */
     uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -264,16 +264,16 @@ typedef union {
 #define TAL_HALT_OFFSET             0x00C        /**< \brief (TAL_HALT offset) Debug Halt Request */
 #define TAL_HALT_RESETVALUE         _U_(0x00)    /**< \brief (TAL_HALT reset_value) Debug Halt Request */
 
-#define TAL_HALT_CPU0_Pos           0            /**< \brief (TAL_HALT) CPU 0 Break Master */
+#define TAL_HALT_CPU0_Pos           0            /**< \brief (TAL_HALT) CPU 0 Break Leader */
 #define TAL_HALT_CPU0               (_U_(1) << TAL_HALT_CPU0_Pos)
-#define TAL_HALT_CPU1_Pos           1            /**< \brief (TAL_HALT) CPU 1 Break Master */
+#define TAL_HALT_CPU1_Pos           1            /**< \brief (TAL_HALT) CPU 1 Break Leader */
 #define TAL_HALT_CPU1               (_U_(1) << TAL_HALT_CPU1_Pos)
-#define TAL_HALT_CPU_Pos            0            /**< \brief (TAL_HALT) CPU x Break Master */
+#define TAL_HALT_CPU_Pos            0            /**< \brief (TAL_HALT) CPU x Break Leader */
 #define TAL_HALT_CPU_Msk            (_U_(0x3) << TAL_HALT_CPU_Pos)
 #define TAL_HALT_CPU(value)         (TAL_HALT_CPU_Msk & ((value) << TAL_HALT_CPU_Pos))
-#define TAL_HALT_EVBRK_Pos          6            /**< \brief (TAL_HALT) Event Break Master */
+#define TAL_HALT_EVBRK_Pos          6            /**< \brief (TAL_HALT) Event Break Leader */
 #define TAL_HALT_EVBRK              (_U_(0x1) << TAL_HALT_EVBRK_Pos)
-#define TAL_HALT_EXTBRK_Pos         7            /**< \brief (TAL_HALT) External Break Master */
+#define TAL_HALT_EXTBRK_Pos         7            /**< \brief (TAL_HALT) External Break Leader */
 #define TAL_HALT_EXTBRK             (_U_(0x1) << TAL_HALT_EXTBRK_Pos)
 #define TAL_HALT_MASK               _U_(0xC3)    /**< \brief (TAL_HALT) MASK Register */
 
@@ -281,13 +281,13 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CPU0:1;           /*!< bit:      0  CPU 0 Break Master                 */
-    uint8_t  CPU1:1;           /*!< bit:      1  CPU 1 Break Master                 */
+    uint8_t  CPU0:1;           /*!< bit:      0  CPU 0 Break Leader                 */
+    uint8_t  CPU1:1;           /*!< bit:      1  CPU 1 Break Leader                 */
     uint8_t  :5;               /*!< bit:  2.. 6  Reserved                           */
-    uint8_t  EXTBRK:1;         /*!< bit:      7  External Break Master              */
+    uint8_t  EXTBRK:1;         /*!< bit:      7  External Break Leader              */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint8_t  CPU:2;            /*!< bit:  0.. 1  CPU x Break Master                 */
+    uint8_t  CPU:2;            /*!< bit:  0.. 1  CPU x Break Leader                 */
     uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -297,14 +297,14 @@ typedef union {
 #define TAL_RESTART_OFFSET          0x00D        /**< \brief (TAL_RESTART offset) Debug Restart Request */
 #define TAL_RESTART_RESETVALUE      _U_(0x00)    /**< \brief (TAL_RESTART reset_value) Debug Restart Request */
 
-#define TAL_RESTART_CPU0_Pos        0            /**< \brief (TAL_RESTART) CPU 0 Break Master */
+#define TAL_RESTART_CPU0_Pos        0            /**< \brief (TAL_RESTART) CPU 0 Break Leader */
 #define TAL_RESTART_CPU0            (_U_(1) << TAL_RESTART_CPU0_Pos)
-#define TAL_RESTART_CPU1_Pos        1            /**< \brief (TAL_RESTART) CPU 1 Break Master */
+#define TAL_RESTART_CPU1_Pos        1            /**< \brief (TAL_RESTART) CPU 1 Break Leader */
 #define TAL_RESTART_CPU1            (_U_(1) << TAL_RESTART_CPU1_Pos)
-#define TAL_RESTART_CPU_Pos         0            /**< \brief (TAL_RESTART) CPU x Break Master */
+#define TAL_RESTART_CPU_Pos         0            /**< \brief (TAL_RESTART) CPU x Break Leader */
 #define TAL_RESTART_CPU_Msk         (_U_(0x3) << TAL_RESTART_CPU_Pos)
 #define TAL_RESTART_CPU(value)      (TAL_RESTART_CPU_Msk & ((value) << TAL_RESTART_CPU_Pos))
-#define TAL_RESTART_EXTBRK_Pos      7            /**< \brief (TAL_RESTART) External Break Master */
+#define TAL_RESTART_EXTBRK_Pos      7            /**< \brief (TAL_RESTART) External Break Leader */
 #define TAL_RESTART_EXTBRK          (_U_(0x1) << TAL_RESTART_EXTBRK_Pos)
 #define TAL_RESTART_MASK            _U_(0x83)    /**< \brief (TAL_RESTART) MASK Register */
 
@@ -382,14 +382,14 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  CPU0:1;           /*!< bit:      0  CPU 0 Break Master                 */
-    uint8_t  CPU1:1;           /*!< bit:      1  CPU 1 Break Master                 */
+    uint8_t  CPU0:1;           /*!< bit:      0  CPU 0 Break Leader                 */
+    uint8_t  CPU1:1;           /*!< bit:      1  CPU 1 Break Leader                 */
     uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
-    uint8_t  EVBRK:1;          /*!< bit:      6  Event Break Master                 */
-    uint8_t  EXTBRK:1;         /*!< bit:      7  External Break Master              */
+    uint8_t  EVBRK:1;          /*!< bit:      6  Event Break Leader                 */
+    uint8_t  EXTBRK:1;         /*!< bit:      7  External Break Leader              */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint8_t  CPU:2;            /*!< bit:  0.. 1  CPU x Break Master                 */
+    uint8_t  CPU:2;            /*!< bit:  0.. 1  CPU x Break Leader                 */
     uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -399,16 +399,16 @@ typedef union {
 #define TAL_CTIMASK_OFFSET          0x011        /**< \brief (TAL_CTIMASK offset) Cross-Trigger Interface n Mask */
 #define TAL_CTIMASK_RESETVALUE      _U_(0x00)    /**< \brief (TAL_CTIMASK reset_value) Cross-Trigger Interface n Mask */
 
-#define TAL_CTIMASK_CPU0_Pos        0            /**< \brief (TAL_CTIMASK) CPU 0 Break Master */
+#define TAL_CTIMASK_CPU0_Pos        0            /**< \brief (TAL_CTIMASK) CPU 0 Break Leader */
 #define TAL_CTIMASK_CPU0            (_U_(1) << TAL_CTIMASK_CPU0_Pos)
-#define TAL_CTIMASK_CPU1_Pos        1            /**< \brief (TAL_CTIMASK) CPU 1 Break Master */
+#define TAL_CTIMASK_CPU1_Pos        1            /**< \brief (TAL_CTIMASK) CPU 1 Break Leader */
 #define TAL_CTIMASK_CPU1            (_U_(1) << TAL_CTIMASK_CPU1_Pos)
-#define TAL_CTIMASK_CPU_Pos         0            /**< \brief (TAL_CTIMASK) CPU x Break Master */
+#define TAL_CTIMASK_CPU_Pos         0            /**< \brief (TAL_CTIMASK) CPU x Break Leader */
 #define TAL_CTIMASK_CPU_Msk         (_U_(0x3) << TAL_CTIMASK_CPU_Pos)
 #define TAL_CTIMASK_CPU(value)      (TAL_CTIMASK_CPU_Msk & ((value) << TAL_CTIMASK_CPU_Pos))
-#define TAL_CTIMASK_EVBRK_Pos       6            /**< \brief (TAL_CTIMASK) Event Break Master */
+#define TAL_CTIMASK_EVBRK_Pos       6            /**< \brief (TAL_CTIMASK) Event Break Leader */
 #define TAL_CTIMASK_EVBRK           (_U_(0x1) << TAL_CTIMASK_EVBRK_Pos)
-#define TAL_CTIMASK_EXTBRK_Pos      7            /**< \brief (TAL_CTIMASK) External Break Master */
+#define TAL_CTIMASK_EXTBRK_Pos      7            /**< \brief (TAL_CTIMASK) External Break Leader */
 #define TAL_CTIMASK_EXTBRK          (_U_(0x1) << TAL_CTIMASK_EXTBRK_Pos)
 #define TAL_CTIMASK_MASK            _U_(0xC3)    /**< \brief (TAL_CTIMASK) MASK Register */
 

@@ -10,8 +10,8 @@
 
 /* Select hand configuration */
 
-#define MASTER_LEFT
-// #define MASTER_RIGHT
+#define LEADER_LEFT
+// #define LEADER_RIGHT
 // #define EE_HANDS
 
 #define RGB_DI_PIN D3

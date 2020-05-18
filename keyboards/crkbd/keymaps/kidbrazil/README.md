@@ -43,7 +43,7 @@ will use the default QMK one.
 This Keymap is setup to use the newer OLED API. Some work has been done to
 customize this with showing layer and USB information. I also tried my best to
 get a dormant / sleep state going but it is hit or miss and often only works on
-the master hand.
+the leader hand.
 
 ## OLED & RGB Matrix timeout
 This keymap will set a automated timeout system for the OLED screen and the RGB

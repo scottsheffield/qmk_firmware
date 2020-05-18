@@ -149,18 +149,18 @@
 #define SERCOM6_RETENTION_SUPPORT   0        // Retention supported?
 #define SERCOM6_SE_CNT              1        // SE counter included?
 #define SERCOM6_SPI                 1        // SPI mode implemented?
-#define SERCOM6_SPI_HW_SS_CTRL      1        // Master _SS hardware control implemented?
+#define SERCOM6_SPI_HW_SS_CTRL      1        // Leader _SS hardware control implemented?
 #define SERCOM6_SPI_ICSPACE_EXT     1        // SPI inter character space implemented?
 #define SERCOM6_SPI_OZMO            0        // OZMO features implemented?
 #define SERCOM6_SPI_WAKE_ON_SSL     1        // _SS low detect implemented?
 #define SERCOM6_TTBIT_EXTENSION     1        // 32-bit extension implemented?
-#define SERCOM6_TWIM                1        // TWI Master mode implemented?
-#define SERCOM6_TWIS                1        // TWI Slave mode implemented?
-#define SERCOM6_TWIS_AUTO_ACK       1        // TWI slave automatic acknowledge implemented?
-#define SERCOM6_TWIS_GROUP_CMD      1        // TWI slave group command implemented?
+#define SERCOM6_TWIM                1        // TWI Leader mode implemented?
+#define SERCOM6_TWIS                1        // TWI Follower mode implemented?
+#define SERCOM6_TWIS_AUTO_ACK       1        // TWI follower automatic acknowledge implemented?
+#define SERCOM6_TWIS_GROUP_CMD      1        // TWI follower group command implemented?
 #define SERCOM6_TWIS_SDASETUP_CNT_SIZE 8        // TWIS sda setup count size
 #define SERCOM6_TWIS_SDASETUP_SIZE  4        // TWIS sda setup size
-#define SERCOM6_TWIS_SUDAT          1        // TWI slave SDA setup implemented?
+#define SERCOM6_TWIS_SUDAT          1        // TWI follower SDA setup implemented?
 #define SERCOM6_TWI_FASTMP          1        // TWI fast mode plus implemented?
 #define SERCOM6_TWI_HSMODE          1        // USART mode implemented?
 #define SERCOM6_TWI_SCLSM_MODE      1        // TWI SCL clock stretch mode implemented?
@@ -173,7 +173,7 @@
 #define SERCOM6_USART_FRAC_BAUD     1        // USART fractional BAUD implemented?
 #define SERCOM6_USART_IRDA          1        // USART IrDA implemented?
 #define SERCOM6_USART_ISO7816       1        // USART ISO7816 mode implemented?
-#define SERCOM6_USART_LIN_MASTER    1        // USART LIN Master mode implemented?
+#define SERCOM6_USART_LIN_LEADER    1        // USART LIN Leader mode implemented?
 #define SERCOM6_USART_RS485         1        // USART RS485 mode implemented?
 #define SERCOM6_USART_SAMPA_EXT     1        // USART sample adjust implemented?
 #define SERCOM6_USART_SAMPR_EXT     1        // USART oversampling adjustment implemented?

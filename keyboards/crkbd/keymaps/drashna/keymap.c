@@ -1,6 +1,6 @@
 #include "drashna.h"
 
-extern uint8_t is_master;
+extern uint8_t is_leader;
 
 #ifdef RGBLIGHT_ENABLE
 // Following line allows macro to read current RGB settings
@@ -144,7 +144,7 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
         add_keylog(keycode);
 #endif
 #ifndef SPLIT_KEYBOARD
-        if (keycode == RESET && !is_master) {
+        if (keycode == RESET && !is_leader) {
             return false;
         }
 #endif
@@ -292,7 +292,7 @@ void oled_task_user(void) {
 #    endif
 
     update_log();
-    if (is_master) {
+    if (is_leader) {
         render_status_main();  // Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
         render_status_secondary();

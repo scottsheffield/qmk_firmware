@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "gingham.h"
-#include "i2c_master.h"
+#include "i2c_leader.h"
 
 uint8_t send_data;
 

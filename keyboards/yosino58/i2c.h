@@ -12,28 +12,28 @@
 #define I2C_ACK 1
 #define I2C_NACK 0
 
-#define SLAVE_BUFFER_SIZE 0x10
+#define FOLLOWER_BUFFER_SIZE 0x10
 
 // i2c SCL clock frequency 400kHz
 #define SCL_CLOCK  400000L
 
-extern volatile uint8_t i2c_slave_buffer[SLAVE_BUFFER_SIZE];
+extern volatile uint8_t i2c_follower_buffer[FOLLOWER_BUFFER_SIZE];
 
-void i2c_master_init(void);
-uint8_t i2c_master_start(uint8_t address);
-void i2c_master_stop(void);
-uint8_t i2c_master_write(uint8_t data);
-uint8_t i2c_master_read(int);
+void i2c_leader_init(void);
+uint8_t i2c_leader_start(uint8_t address);
+void i2c_leader_stop(void);
+uint8_t i2c_leader_write(uint8_t data);
+uint8_t i2c_leader_read(int);
 void i2c_reset_state(void);
-void i2c_slave_init(uint8_t address);
+void i2c_follower_init(uint8_t address);
 
 
 static inline unsigned char i2c_start_read(unsigned char addr) {
-  return i2c_master_start((addr << 1) | I2C_READ);
+  return i2c_leader_start((addr << 1) | I2C_READ);
 }
 
 static inline unsigned char i2c_start_write(unsigned char addr) {
-  return i2c_master_start((addr << 1) | I2C_WRITE);
+  return i2c_leader_start((addr << 1) | I2C_WRITE);
 }
 
 // from SSD1306 scrips
